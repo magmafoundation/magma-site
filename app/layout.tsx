@@ -6,9 +6,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "MagmaNeo - Run NeoForge Mods and Bukkit Plugins Together",
+  title: "Magma - Run NeoForge Mods and Bukkit Plugins Together",
   description:
-    "MagmaNeo is the ultimate Minecraft server software that combines the power of NeoForge mods and Bukkit plugins in one seamless experience.",
+    "Magma is the ultimate Minecraft server software that combines the power of NeoForge mods and Bukkit plugins in one seamless experience.",
   icons: {
     icon: "/magma-icon.png",
   },
