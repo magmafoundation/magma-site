@@ -19,7 +19,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
         <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
           <div className="flex gap-6 md:gap-10">
             <Link href="/" className="flex items-center space-x-2">
@@ -30,7 +30,7 @@ export default function Home() {
                 height={40}
                 className="h-8 w-8"
               />
-              <span className="inline-block font-bold text-xl bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+              <span className="inline-block font-bold text-xl bg-linear-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
                 Magma
               </span>
             </Link>
@@ -83,7 +83,7 @@ export default function Home() {
               </Button>
               <Button
                 variant="default"
-                className="hidden md:flex bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+                className="hidden md:flex bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
               >
                 <Download className="mr-2 h-4 w-4" /> Download
               </Button>
@@ -93,7 +93,7 @@ export default function Home() {
         </div>
       </header>
       <main className="flex-1">
-        <section className="w-full py-8 md:py-16 lg:py-24 xl:py-32 bg-gradient-to-b from-background to-muted">
+        <section className="w-full py-8 md:py-16 lg:py-24 xl:py-32 bg-linear-to-b from-background to-muted">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
               <div className="flex flex-col justify-center space-y-4">
@@ -113,7 +113,7 @@ export default function Home() {
                   <Button
                     asChild
                     size="lg"
-                    className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+                    className="bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
                   >
                     <Link href="#download">
                       Get Started <ChevronRight className="ml-2 h-4 w-4" />
@@ -125,14 +125,14 @@ export default function Home() {
                 </div>
               </div>
               <div className="flex items-center justify-center mt-8 lg:mt-0">
-                <div className="relative w-full aspect-square md:aspect-video lg:aspect-square overflow-hidden rounded-lg border bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 p-4 md:p-6 shadow-xl">
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-lg"></div>
+                <div className="relative w-full aspect-square md:aspect-video lg:aspect-square overflow-hidden rounded-lg border bg-linear-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 p-4 md:p-6 shadow-xl">
+                  <div className="absolute inset-0 bg-linear-to-br from-orange-500/10 to-red-500/10 rounded-lg"></div>
 
                   {/* Server Icon in Center */}
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="relative flex items-center justify-center w-16 h-16 md:w-24 md:h-24 bg-gradient-to-br from-orange-500 to-red-500 rounded-full shadow-lg">
+                    <div className="relative flex items-center justify-center w-16 h-16 md:w-24 md:h-24 bg-linear-to-br from-orange-500 to-red-500 rounded-full shadow-lg">
                       <Server className="w-8 h-8 md:w-12 md:h-12 text-white" />
-                      <div className="absolute -inset-1 bg-gradient-to-br from-orange-500/50 to-red-500/50 rounded-full blur-sm -z-10"></div>
+                      <div className="absolute -inset-1 bg-linear-to-br from-orange-500/50 to-red-500/50 rounded-full blur-xs -z-10"></div>
                     </div>
                   </div>
 
@@ -338,7 +338,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-8 md:py-12 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="flex flex-col items-center space-y-4 rounded-lg border p-4 md:p-6 shadow-sm">
+              <div className="flex flex-col items-center space-y-4 rounded-lg border p-4 md:p-6 shadow-xs">
                 <div className="rounded-full bg-orange-100 p-3 dark:bg-orange-800/30">
                   <Puzzle className="h-6 w-6 text-orange-500 dark:text-orange-400" />
                 </div>
@@ -350,7 +350,7 @@ export default function Home() {
                   new content to your server.
                 </p>
               </div>
-              <div className="flex flex-col items-center space-y-4 rounded-lg border p-4 md:p-6 shadow-sm">
+              <div className="flex flex-col items-center space-y-4 rounded-lg border p-4 md:p-6 shadow-xs">
                 <div className="rounded-full bg-red-100 p-3 dark:bg-red-800/30">
                   <Code className="h-6 w-6 text-red-500 dark:text-red-400" />
                 </div>
@@ -362,7 +362,7 @@ export default function Home() {
                   protection, and administration.
                 </p>
               </div>
-              <div className="flex flex-col items-center space-y-4 rounded-lg border p-4 md:p-6 shadow-sm">
+              <div className="flex flex-col items-center space-y-4 rounded-lg border p-4 md:p-6 shadow-xs">
                 <div className="rounded-full bg-amber-100 p-3 dark:bg-amber-800/30">
                   <Zap className="h-6 w-6 text-amber-500 dark:text-amber-400" />
                 </div>
@@ -374,7 +374,7 @@ export default function Home() {
                   and efficient resource usage.
                 </p>
               </div>
-              <div className="flex flex-col items-center space-y-4 rounded-lg border p-4 md:p-6 shadow-sm">
+              <div className="flex flex-col items-center space-y-4 rounded-lg border p-4 md:p-6 shadow-xs">
                 <div className="rounded-full bg-green-100 p-3 dark:bg-green-800/30">
                   <Server className="h-6 w-6 text-green-500 dark:text-green-400" />
                 </div>
@@ -384,7 +384,7 @@ export default function Home() {
                   installation process and configuration.
                 </p>
               </div>
-              <div className="flex flex-col items-center space-y-4 rounded-lg border p-4 md:p-6 shadow-sm">
+              <div className="flex flex-col items-center space-y-4 rounded-lg border p-4 md:p-6 shadow-xs">
                 <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-800/30">
                   <Users className="h-6 w-6 text-blue-500 dark:text-blue-400" />
                 </div>
@@ -396,7 +396,7 @@ export default function Home() {
                   support and collaboration.
                 </p>
               </div>
-              <div className="flex flex-col items-center space-y-4 rounded-lg border p-4 md:p-6 shadow-sm">
+              <div className="flex flex-col items-center space-y-4 rounded-lg border p-4 md:p-6 shadow-xs">
                 <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-800/30">
                   <BookOpen className="h-6 w-6 text-purple-500 dark:text-purple-400" />
                 </div>
@@ -405,7 +405,7 @@ export default function Home() {
                 </h3>
                 <p className="text-center text-sm md:text-base text-muted-foreground">
                   Access detailed documentation to help you make the most of
-                  Magma's features.
+                  Magma&apos;s features.
                 </p>
               </div>
             </div>
@@ -432,7 +432,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-8 md:py-12 md:grid-cols-2">
-              {/* <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-4 md:p-6 shadow-sm">
+              {/* <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-4 md:p-6 shadow-xs">
                 <h3 className="text-lg md:text-xl font-bold">
                   Latest Stable Release
                 </h3>
@@ -440,7 +440,7 @@ export default function Home() {
                   Magma v1.2.0 for Minecraft 1.19.2
                 </p>
                 <div className="flex flex-col w-full gap-2 min-[400px]:flex-row">
-                  <Button className="w-full md:w-auto bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600">
+                  <Button className="w-full md:w-auto bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600">
                     <Download className="mr-2 h-4 w-4" /> Download
                   </Button>
                   <Button variant="outline" className="w-full md:w-auto">
@@ -448,7 +448,7 @@ export default function Home() {
                   </Button>
                 </div>
               </div>
-              <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-4 md:p-6 shadow-sm">
+              <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-4 md:p-6 shadow-xs">
                 <h3 className="text-lg md:text-xl font-bold">
                   Development Build
                 </h3>
@@ -487,12 +487,12 @@ export default function Home() {
             <div className="grid gap-8 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
               <div className="flex items-center justify-center order-2 lg:order-1">
                 <div className="relative w-full aspect-video overflow-hidden rounded-lg border bg-background shadow-xl">
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-red-500/5"></div>
+                  <div className="absolute inset-0 bg-linear-to-br from-orange-500/5 to-red-500/5"></div>
 
                   {/* Documentation Preview */}
                   <div className="absolute inset-0 p-2 md:p-4 flex flex-col">
                     <div className="flex items-center gap-2 border-b pb-2 md:pb-3 mb-2 md:mb-3">
-                      <div className="w-4 h-4 md:w-6 md:h-6 rounded-md bg-gradient-to-r from-orange-500 to-red-500"></div>
+                      <div className="w-4 h-4 md:w-6 md:h-6 rounded-md bg-linear-to-r from-orange-500 to-red-500"></div>
                       <div className="text-base md:text-lg font-bold">
                         Magma Documentation
                       </div>
@@ -597,31 +597,31 @@ export default function Home() {
                 </div>
                 <ul className="grid gap-2">
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="h-4 w-4 text-orange-500 flex-shrink-0" />
+                    <ChevronRight className="h-4 w-4 text-orange-500 shrink-0" />
                     <span className="text-sm md:text-base">
                       Installation guides for different operating systems
                     </span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="h-4 w-4 text-orange-500 flex-shrink-0" />
+                    <ChevronRight className="h-4 w-4 text-orange-500 shrink-0" />
                     <span className="text-sm md:text-base">
                       Mod and plugin compatibility lists
                     </span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="h-4 w-4 text-orange-500 flex-shrink-0" />
+                    <ChevronRight className="h-4 w-4 text-orange-500 shrink-0" />
                     <span className="text-sm md:text-base">
                       Performance optimization tips
                     </span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="h-4 w-4 text-orange-500 flex-shrink-0" />
+                    <ChevronRight className="h-4 w-4 text-orange-500 shrink-0" />
                     <span className="text-sm md:text-base">
                       Troubleshooting common issues
                     </span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="h-4 w-4 text-orange-500 flex-shrink-0" />
+                    <ChevronRight className="h-4 w-4 text-orange-500 shrink-0" />
                     <span className="text-sm md:text-base">
                       API documentation for developers
                     </span>
@@ -631,7 +631,7 @@ export default function Home() {
                   <Button
                     asChild
                     size="lg"
-                    className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+                    className="w-full sm:w-auto bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
                   >
                     <Link href="#">Browse Documentation</Link>
                   </Button>
@@ -661,7 +661,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-8 md:py-12 sm:grid-cols-2 md:grid-cols-2">
-              <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-4 md:p-6 shadow-sm">
+              <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-4 md:p-6 shadow-xs">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -685,7 +685,7 @@ export default function Home() {
                   <Link href="https://discord.gg/magma">Join Discord</Link>
                 </Button>
               </div>
-              <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-4 md:p-6 shadow-sm">
+              <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-4 md:p-6 shadow-xs">
                 <Github className="h-10 w-10 text-orange-500" />
                 <h3 className="text-lg md:text-xl font-bold">GitHub</h3>
                 <p className="text-center text-sm md:text-base text-muted-foreground">
@@ -712,7 +712,7 @@ export default function Home() {
               height={32}
               className="h-8 w-8"
             />
-            <span className="font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+            <span className="font-bold bg-linear-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
               Magma
             </span>
           </div>

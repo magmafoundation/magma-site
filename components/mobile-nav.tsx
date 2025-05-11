@@ -37,7 +37,7 @@ export function MobileNav() {
                 height={32}
                 className="h-8 w-8"
               />
-              <span className="font-bold text-xl bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+              <span className="font-bold text-xl bg-linear-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
                 MagmaNeo
               </span>
             </div>
@@ -101,7 +101,7 @@ export function MobileNav() {
           </div>
           <SheetClose asChild>
             <Button
-              className="mt-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+              className="mt-2 bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
               onClick={() => setOpen(false)}
             >
               <Download className="mr-2 h-4 w-4" /> Download
