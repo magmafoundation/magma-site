@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, Server, Download, BookOpen, Users, Github } from "lucide-react";
+import { Menu, Server, Download, BookOpen, Users } from "lucide-react";
+import { SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -32,22 +33,22 @@ export function MobileNav() {
             <div className="flex items-center gap-2">
               <Image
                 src="/magma-icon.png"
-                alt="MagmaNeo Logo"
+                alt="Magma Logo"
                 width={32}
                 height={32}
                 className="h-8 w-8"
               />
               <span className="font-bold text-xl bg-linear-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
-                MagmaNeo
+                Magma
               </span>
             </div>
           </SheetTitle>
         </SheetHeader>
-        <nav className="flex flex-col gap-4 mt-8">
+        <nav className="flex flex-col gap-4 mt-4 px-4">
           <SheetClose asChild>
             <Link
               href="#features"
-              className="flex items-center gap-2 px-4 py-2 text-base font-medium rounded-md hover:bg-muted"
+              className="flex items-center gap-2 px-4 py-2 text-base font-medium rounded-md hover:bg-muted w-full"
               onClick={() => setOpen(false)}
             >
               <Server className="h-5 w-5 text-orange-500" />
@@ -57,7 +58,7 @@ export function MobileNav() {
           <SheetClose asChild>
             <Link
               href="#download"
-              className="flex items-center gap-2 px-4 py-2 text-base font-medium rounded-md hover:bg-muted"
+              className="flex items-center gap-2 px-4 py-2 text-base font-medium rounded-md hover:bg-muted w-full"
               onClick={() => setOpen(false)}
             >
               <Download className="h-5 w-5 text-orange-500" />
@@ -67,7 +68,7 @@ export function MobileNav() {
           <SheetClose asChild>
             <Link
               href="#docs"
-              className="flex items-center gap-2 px-4 py-2 text-base font-medium rounded-md hover:bg-muted"
+              className="flex items-center gap-2 px-4 py-2 text-base font-medium rounded-md hover:bg-muted w-full"
               onClick={() => setOpen(false)}
             >
               <BookOpen className="h-5 w-5 text-orange-500" />
@@ -77,7 +78,7 @@ export function MobileNav() {
           <SheetClose asChild>
             <Link
               href="#community"
-              className="flex items-center gap-2 px-4 py-2 text-base font-medium rounded-md hover:bg-muted"
+              className="flex items-center gap-2 px-4 py-2 text-base font-medium rounded-md hover:bg-muted w-full"
               onClick={() => setOpen(false)}
             >
               <Users className="h-5 w-5 text-orange-500" />
@@ -87,21 +88,31 @@ export function MobileNav() {
           <div className="h-px bg-border my-2" />
           <SheetClose asChild>
             <Link
-              href="https://github.com"
-              className="flex items-center gap-2 px-4 py-2 text-base font-medium rounded-md hover:bg-muted"
+              href="https://github.com/magmafoundation/Magma-Neo"
+              className="flex items-center gap-2 px-4 py-2 text-base font-medium rounded-md hover:bg-muted w-full"
               onClick={() => setOpen(false)}
             >
-              <Github className="h-5 w-5 text-orange-500" />
+              <SiGithub className="h-5 w-5" />
               GitHub
             </Link>
           </SheetClose>
-          <div className="flex items-center gap-2 px-4 py-2">
+          <SheetClose asChild>
+            <Link
+              href="https://discord.gg/magma"
+              className="flex items-center gap-2 px-4 py-2 text-base font-medium rounded-md hover:bg-muted w-full"
+              onClick={() => setOpen(false)}
+            >
+              <SiDiscord className="h-5 w-5" />
+              Discord
+            </Link>
+          </SheetClose>
+          <div className="flex items-center justify-between px-4 py-2 w-full">
             <span className="text-base font-medium">Theme</span>
             <ThemeToggle />
           </div>
           <SheetClose asChild>
             <Button
-              className="mt-2 bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+              className="mt-2 bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 w-full mx-0 px-4"
               onClick={() => setOpen(false)}
             >
               <Download className="mr-2 h-4 w-4" /> Download

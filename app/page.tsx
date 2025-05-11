@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   Download,
-  Github,
   Server,
   Puzzle,
   Zap,
@@ -12,6 +11,7 @@ import {
   BookOpen,
   Cpu,
 } from "lucide-react";
+import { SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
 import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -78,7 +78,7 @@ export default function Home() {
                   href="https://github.com/magmafoundation/Magma-Neo"
                   aria-label="GitHub"
                 >
-                  <Github className="h-5 w-5" />
+                  <SiGithub className="h-5 w-5" />
                 </Link>
               </Button>
               <Button
@@ -465,7 +465,14 @@ export default function Home() {
                     className="w-full md:w-auto"
                   >
                     <Link href="https://github.com">
-                      <Github className="mr-2 h-4 w-4" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        className="mr-2 h-4 w-4"
+                        fill="currentColor"
+                      >
+                        <path d={siGithub.path} />
+                      </svg>
                     </Link>
                   </Button>
                 </div>
@@ -662,20 +669,7 @@ export default function Home() {
             </div>
             <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-8 md:py-12 sm:grid-cols-2 md:grid-cols-2">
               <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-4 md:p-6 shadow-xs">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-10 w-10 text-orange-500"
-                >
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
+                <SiDiscord className="h-10 w-10 " />
                 <h3 className="text-lg md:text-xl font-bold">Discord</h3>
                 <p className="text-center text-sm md:text-base text-muted-foreground">
                   Join our Discord server to chat with other users and get
@@ -686,7 +680,7 @@ export default function Home() {
                 </Button>
               </div>
               <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-4 md:p-6 shadow-xs">
-                <Github className="h-10 w-10 text-orange-500" />
+                <SiGithub className="h-10 w-10 " />
                 <h3 className="text-lg md:text-xl font-bold">GitHub</h3>
                 <p className="text-center text-sm md:text-base text-muted-foreground">
                   Contribute to the project, report issues, and submit pull
