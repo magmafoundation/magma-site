@@ -1,4 +1,5 @@
 import { MainNav } from "@/components/main-nav";
+import { ReactNode } from "react";
 
 export default function Layout({
   children,
