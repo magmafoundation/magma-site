@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { headers } from "next/headers";
+import { getBaseUrl } from "@/lib/baseurl";
 
 // Define a schema for download type validation
 const DownloadTypeSchema = z.enum(["jar", "installer", "changelog"]);
@@ -18,6 +20,9 @@ const VersionsResponseSchema = z.object({
 
 export async function GET(request: NextRequest) {
   try {
+    const requestHeaders = await headers();
+    const baseUrl = getBaseUrl(requestHeaders);
+
     const { searchParams } = new URL(request.url);
     const type = searchParams.get("type") || "installer"; // Default to installer
 
@@ -36,15 +41,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch the latest version from the versions endpoint with limit=1
-    const versionsResponse = await fetch(
-      new URL("/api/versions?limit=1", request.url).toString(),
-      {
-        headers: {
-          "User-Agent": "Mozilla/5.0 (compatible; MagmaNeoWebsite/1.0)",
-        },
-        next: { revalidate: 3600 }, // Cache for 1 hour
-      }
-    );
+    const versionsResponse = await fetch(`${baseUrl}/api/versions?limit=1`, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (compatible; MagmaNeoWebsite/1.0)",
+      },
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
 
     if (!versionsResponse.ok) {
       throw new Error(`Failed to fetch versions: ${versionsResponse.status}`);
@@ -74,10 +76,7 @@ export async function GET(request: NextRequest) {
     const latestVersion = versionsResult.data.versions[0].version;
 
     // Redirect to the download endpoint for the specific version
-    const downloadUrl = new URL(
-      `/api/versions/${latestVersion}/download?type=${type}`,
-      request.url
-    ).toString();
+    const downloadUrl = `${baseUrl}/api/versions/${latestVersion}/download?type=${type}`;
 
     return NextResponse.redirect(downloadUrl, {
       headers: {

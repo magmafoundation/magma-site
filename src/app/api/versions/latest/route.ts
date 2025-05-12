@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { headers } from "next/headers";
+import { getBaseUrl } from "@/lib/baseurl";
 
 // Define Zod schema for the Maven Artifact
 const MavenArtifactSchema = z.object({
@@ -28,8 +30,11 @@ const VersionsResponseSchema = z.object({
 
 export async function GET() {
   try {
+    const requestHeaders = await headers();
+    const baseUrl = getBaseUrl(requestHeaders);
+
     // Fetch the latest version from the versions endpoint with limit=1
-    const versionsResponse = await fetch("/api/versions?limit=1", {
+    const versionsResponse = await fetch(`${baseUrl}/api/versions?limit=1`, {
       headers: {
         "User-Agent": "Mozilla/5.0 (compatible; MagmaNeoWebsite/1.0)",
       },
@@ -65,7 +70,7 @@ export async function GET() {
 
     // Fetch detailed information for the latest version
     const detailsResponse = await fetch(
-      `/api/versions/${latestVersion.version}`,
+      `${baseUrl}/api/versions/${latestVersion.version}`,
       {
         headers: {
           "User-Agent": "Mozilla/5.0 (compatible; MagmaNeoWebsite/1.0)",

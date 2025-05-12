@@ -41,7 +41,8 @@ export function LatestVersionDownload() {
         setLoading(true);
 
         // Use the new latest version API endpoint
-        const response = await fetch("/api/versions/latest");
+        const { origin } = window.location;
+        const response = await fetch(`${origin}/api/versions/latest`);
 
         if (!response.ok) {
           throw new Error(`Failed to fetch latest version: ${response.status}`);
