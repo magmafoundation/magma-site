@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 
 // Define Zod schema for the Maven Artifact
@@ -26,7 +26,7 @@ const VersionsResponseSchema = z.object({
   versions: z.array(MavenArtifactSchema),
 });
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Fetch the latest version from the versions endpoint with limit=1
     const versionsResponse = await fetch("/api/versions?limit=1", {
