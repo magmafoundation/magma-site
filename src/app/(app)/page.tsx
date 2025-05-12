@@ -9,7 +9,6 @@ import {
   Users,
   BookOpen,
   Cpu,
-  Download,
 } from "lucide-react";
 import { SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
 import { Button } from "@/components/ui/button";
