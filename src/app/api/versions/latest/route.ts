@@ -29,15 +29,12 @@ const VersionsResponseSchema = z.object({
 export async function GET(request: NextRequest) {
   try {
     // Fetch the latest version from the versions endpoint with limit=1
-    const versionsResponse = await fetch(
-      new URL("/api/versions?limit=1", request.url).toString(),
-      {
-        headers: {
-          "User-Agent": "Mozilla/5.0 (compatible; MagmaNeoWebsite/1.0)",
-        },
-        next: { revalidate: 3600 }, // Cache for 1 hour
-      }
-    );
+    const versionsResponse = await fetch("/api/versions?limit=1", {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (compatible; MagmaNeoWebsite/1.0)",
+      },
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
 
     if (!versionsResponse.ok) {
       throw new Error(`Failed to fetch versions: ${versionsResponse.status}`);
@@ -68,7 +65,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch detailed information for the latest version
     const detailsResponse = await fetch(
-      new URL(`/api/versions/${latestVersion.version}`, request.url).toString(),
+      `/api/versions/${latestVersion.version}`,
       {
         headers: {
           "User-Agent": "Mozilla/5.0 (compatible; MagmaNeoWebsite/1.0)",
