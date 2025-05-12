@@ -9,9 +9,11 @@ import {
   Users,
   BookOpen,
   Cpu,
+  Download,
 } from "lucide-react";
 import { SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
 import { Button } from "@/components/ui/button";
+import { LatestVersionDownload } from "@/components/latest-version-download";
 
 export default function Home() {
   return (
@@ -37,10 +39,10 @@ export default function Home() {
                   <Button
                     asChild
                     size="lg"
-                    className="bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+                    className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
                   >
                     <Link href="#download">
-                      Get Started <ChevronRight className="ml-2 h-4 w-4" />
+                      Download Now <Download className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
                   <Button asChild size="lg" variant="outline">
@@ -356,55 +358,8 @@ export default function Home() {
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-8 md:py-12 md:grid-cols-2">
-              {/* <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-4 md:p-6 shadow-xs">
-                <h3 className="text-lg md:text-xl font-bold">
-                  Latest Stable Release
-                </h3>
-                <p className="text-center text-sm md:text-base text-muted-foreground">
-                  Magma v1.2.0 for Minecraft 1.19.2
-                </p>
-                <div className="flex flex-col w-full gap-2 min-[400px]:flex-row">
-                  <Button className="w-full md:w-auto bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600">
-                    <Download className="mr-2 h-4 w-4" /> Download
-                  </Button>
-                  <Button variant="outline" className="w-full md:w-auto">
-                    View Changelog
-                  </Button>
-                </div>
-              </div>
-              <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-4 md:p-6 shadow-xs">
-                <h3 className="text-lg md:text-xl font-bold">
-                  Development Build
-                </h3>
-                <p className="text-center text-sm md:text-base text-muted-foreground">
-                  Magma Dev Build for Minecraft 1.20.1
-                </p>
-                <div className="flex flex-col w-full gap-2 min-[400px]:flex-row">
-                  <Button variant="outline" className="w-full md:w-auto">
-                    <Download className="mr-2 h-4 w-4" /> Download Dev Build
-                  </Button>
-                  <Button
-                    variant="outline"
-                    asChild
-                    className="w-full md:w-auto"
-                  >
-                    <Link href="https://github.com">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        className="mr-2 h-4 w-4"
-                        fill="currentColor"
-                      >
-                        <path d={siGithub.path} />
-                      </svg>
-                    </Link>
-                  </Button>
-                </div>
-              </div> */}
-              <div className="flex flex-col items-center justify-center col-span-2 ">
-                <span className="inline-block rounded-lg bg-orange-100 px-4 py-2 text-lg text-orange-500 dark:bg-orange-800/30 dark:text-orange-400 font-semibold">
-                  Coming Soon
-                </span>
+              <div className="md:col-span-2">
+                <LatestVersionDownload />
               </div>
             </div>
           </div>
@@ -498,8 +453,20 @@ export default function Home() {
                         <div className="text-xs md:text-sm font-medium mb-1 md:mb-2">
                           Download
                         </div>
-                        <div className="bg-muted p-1 md:p-2 rounded text-[10px] md:text-xs font-mono mb-2 md:mb-3">
-                          wget magmafoundation.org/downloads/magma.jar
+                        <div className="bg-muted p-1 md:p-2 rounded text-[10px] md:text-xs font-mono mb-2 md:mb-3 flex items-center justify-between">
+                          <code>
+                            wget magmafoundation.org/downloads/magma.jar
+                          </code>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            asChild
+                            className="h-6 px-2 text-[10px] md:text-xs"
+                          >
+                            <a href="#download">
+                              <Download className="h-3 w-3 mr-1" /> Get Latest
+                            </a>
+                          </Button>
                         </div>
 
                         <div className="text-xs md:text-sm font-medium mb-1 md:mb-2">
@@ -554,7 +521,13 @@ export default function Home() {
                   <li className="flex items-center gap-2">
                     <ChevronRight className="h-4 w-4 text-orange-500 shrink-0" />
                     <span className="text-sm md:text-base">
-                      API documentation for developers
+                      <Link
+                        href="/docs/reference/website-api"
+                        className="hover:underline text-primary"
+                      >
+                        API documentation
+                      </Link>{" "}
+                      for developers
                     </span>
                   </li>
                 </ul>

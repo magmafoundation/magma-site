@@ -17,8 +17,13 @@ const PAGES = [
     icon: <BookOpen className="mr-1.5 h-4 w-4" />,
   },
   {
+    name: "Downloads",
+    href: "/downloads",
+    icon: <Download className="mr-1.5 h-4 w-4" />,
+  },
+  {
     name: "API",
-    href: "",
+    href: "/docs/reference/website-api",
     icon: <Code className="mr-1.5 h-4 w-4" />,
   },
 ];
@@ -94,8 +99,11 @@ export function MainNav() {
             <Button
               variant="default"
               className="hidden md:flex bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+              asChild
             >
-              <Download className="mr-2 h-4 w-4" /> Download
+              <Link href="/downloads">
+                <Download className="mr-2 h-4 w-4" /> Download
+              </Link>
             </Button>
 
             <div className="flex items-center md:hidden">
