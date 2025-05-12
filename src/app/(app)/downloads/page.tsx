@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, InfoIcon } from "lucide-react";
+import Link from "next/link";
 
 export const metadata = {
   title: "Downloads | Magma",
@@ -138,12 +139,12 @@ export default function DownloadsPage() {
               <p className="text-muted-foreground">
                 After downloading your preferred version, you can find detailed
                 installation instructions in our
-                <a
+                <Link
                   href="/docs/installation"
                   className="text-primary hover:underline ml-1"
                 >
                   installation guide
-                </a>
+                </Link>
                 .
               </p>
             </div>

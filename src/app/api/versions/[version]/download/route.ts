@@ -10,11 +10,12 @@ const VersionParamsSchema = z.object({
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { version: string } }
+  context: { params: Promise<{ version: string }> }
 ) {
+  const versionParams = await context.params;
   try {
     // Validate the version parameter
-    const paramsResult = VersionParamsSchema.safeParse(params);
+    const paramsResult = VersionParamsSchema.safeParse(versionParams);
 
     if (!paramsResult.success) {
       return NextResponse.json(
@@ -119,7 +120,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error(`Error in download API for ${params.version}:`, error);
+    console.error(`Error in download API for ${versionParams.version}:`, error);
     return NextResponse.json(
       { error: "Failed to process download request" },
       { status: 500 }

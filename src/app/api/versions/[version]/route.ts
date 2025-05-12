@@ -56,7 +56,7 @@ async function checkFileExists(url: string): Promise<boolean> {
       },
     });
     return response.ok;
-  } catch (error) {
+  } catch {
     return false;
   }
 }
@@ -86,7 +86,7 @@ async function getFileSize(url: string): Promise<string | undefined> {
       }
     }
     return undefined;
-  } catch (error) {
+  } catch {
     return undefined;
   }
 }
@@ -116,7 +116,7 @@ async function getReleaseDate(version: string): Promise<string | undefined> {
       }
     }
     return undefined;
-  } catch (error) {
+  } catch {
     return undefined;
   }
 }
@@ -191,8 +191,9 @@ async function getVersionDetails(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { version: string } }
+  context: { params: Promise<{ version: string }> }
 ) {
+  const params = await context.params;
   try {
     // Validate the version parameter using Zod
     const paramsResult = VersionParamsSchema.safeParse(params);

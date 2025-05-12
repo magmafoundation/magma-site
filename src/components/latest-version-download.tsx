@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Download, FileText } from "lucide-react";
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -100,16 +101,16 @@ export function LatestVersionDownload() {
         </CardContent>
         <CardFooter className="flex justify-center gap-4">
           <Button asChild variant="outline">
-            <a
+            <Link
               href="https://repo.magmafoundation.org/#/releases/org/magmafoundation/magma"
               target="_blank"
               rel="noopener noreferrer"
             >
               Browse Repository
-            </a>
+            </Link>
           </Button>
           <Button asChild>
-            <a href="/downloads">Go to Downloads</a>
+            <Link href="/downloads">Go to Downloads</Link>
           </Button>
         </CardFooter>
       </Card>
@@ -150,12 +151,12 @@ export function LatestVersionDownload() {
               className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
               asChild
             >
-              <a
+              <Link
                 href="/api/versions/latest/download?type=installer"
                 rel="noopener noreferrer"
               >
                 <Download className="mr-2 h-5 w-5" /> Download Installer
-              </a>
+              </Link>
             </Button>
           ) : latestVersion.hasServerJar || latestVersion.downloadUrl ? (
             <Button
@@ -163,12 +164,12 @@ export function LatestVersionDownload() {
               className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
               asChild
             >
-              <a
+              <Link
                 href="/api/versions/latest/download?type=jar"
                 rel="noopener noreferrer"
               >
                 <Download className="mr-2 h-5 w-5" /> Download Server JAR
-              </a>
+              </Link>
             </Button>
           ) : (
             <Button size="lg" className="w-full" disabled>
@@ -178,12 +179,12 @@ export function LatestVersionDownload() {
 
           {(latestVersion.hasChangelog || latestVersion.changelogUrl) && (
             <Button size="sm" variant="outline" className="w-full" asChild>
-              <a
+              <Link
                 href="/api/versions/latest/download?type=changelog"
                 rel="noopener noreferrer"
               >
                 <FileText className="mr-2 h-4 w-4" /> View Changelog
-              </a>
+              </Link>
             </Button>
           )}
         </div>
@@ -191,7 +192,7 @@ export function LatestVersionDownload() {
 
       <CardFooter className="flex justify-center border-t pt-4">
         <Button variant="link" asChild>
-          <a href="/downloads">View All Versions</a>
+          <Link href="/downloads">View All Versions</Link>
         </Button>
       </CardFooter>
     </Card>
