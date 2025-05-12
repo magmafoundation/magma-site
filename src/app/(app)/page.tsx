@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-  Download,
   Server,
   Puzzle,
   Zap,
@@ -10,88 +9,14 @@ import {
   Users,
   BookOpen,
   Cpu,
+  Download,
 } from "lucide-react";
 import { SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
 import { Button } from "@/components/ui/button";
-import { MobileNav } from "@/components/mobile-nav";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
-        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-          <div className="flex gap-6 md:gap-10">
-            <Link href="/" className="flex items-center space-x-2">
-              <Image
-                src="/magma-icon.png"
-                alt="Magma Logo"
-                width={40}
-                height={40}
-                className="h-8 w-8"
-              />
-              <span className="inline-block font-bold text-xl bg-linear-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
-                Magma
-              </span>
-            </Link>
-            <nav className="hidden md:flex gap-6">
-              <Link
-                href="#features"
-                className="flex items-center text-sm font-medium transition-colors hover:text-orange-500"
-              >
-                <Server className="mr-1.5 h-4 w-4" />
-                Features
-              </Link>
-              <Link
-                href="#download"
-                className="flex items-center text-sm font-medium transition-colors hover:text-orange-500"
-              >
-                <Download className="mr-1.5 h-4 w-4" />
-                Download
-              </Link>
-              <Link
-                href="#docs"
-                className="flex items-center text-sm font-medium transition-colors hover:text-orange-500"
-              >
-                <BookOpen className="mr-1.5 h-4 w-4" />
-                Documentation
-              </Link>
-              <Link
-                href="#community"
-                className="flex items-center text-sm font-medium transition-colors hover:text-orange-500"
-              >
-                <Users className="mr-1.5 h-4 w-4" />
-                Community
-              </Link>
-            </nav>
-          </div>
-          <div className="flex flex-1 items-center justify-end space-x-4">
-            <nav className="flex items-center space-x-2">
-              <ThemeToggle />
-              <Button
-                variant="ghost"
-                size="icon"
-                asChild
-                className="hidden md:flex"
-              >
-                <Link
-                  href="https://github.com/magmafoundation/Magma-Neo"
-                  aria-label="GitHub"
-                >
-                  <SiGithub className="h-5 w-5" />
-                </Link>
-              </Button>
-              <Button
-                variant="default"
-                className="hidden md:flex bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
-              >
-                <Download className="mr-2 h-4 w-4" /> Download
-              </Button>
-              <MobileNav />
-            </nav>
-          </div>
-        </div>
-      </header>
       <main className="flex-1">
         <section className="w-full py-8 md:py-16 lg:py-24 xl:py-32 bg-linear-to-b from-background to-muted">
           <div className="container px-4 md:px-6">
@@ -120,7 +45,7 @@ export default function Home() {
                     </Link>
                   </Button>
                   <Button asChild size="lg" variant="outline">
-                    <Link href="#docs">Documentation</Link>
+                    <Link href="/docs">Documentation</Link>
                   </Button>
                 </div>
               </div>
@@ -563,7 +488,7 @@ export default function Home() {
                         <div className="text-[10px] md:text-xs mb-2 md:mb-3">
                           <div className="flex items-center gap-1 mb-1">
                             <div className="w-1 h-1 rounded-full bg-muted-foreground"></div>
-                            <span>Java 17 or higher</span>
+                            <span>Java 21 or newer</span>
                           </div>
                           <div className="flex items-center gap-1 mb-1">
                             <div className="w-1 h-1 rounded-full bg-muted-foreground"></div>
@@ -575,7 +500,7 @@ export default function Home() {
                           Download
                         </div>
                         <div className="bg-muted p-1 md:p-2 rounded text-[10px] md:text-xs font-mono mb-2 md:mb-3">
-                          wget https://Magma.org/downloads/latest.jar
+                          wget magmafoundation.org/downloads/magma.jar
                         </div>
 
                         <div className="text-xs md:text-sm font-medium mb-1 md:mb-2">
@@ -640,7 +565,7 @@ export default function Home() {
                     size="lg"
                     className="w-full sm:w-auto bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
                   >
-                    <Link href="#">Browse Documentation</Link>
+                    <Link href="/docs">Browse Documentation</Link>
                   </Button>
                 </div>
               </div>

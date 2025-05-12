@@ -1,0 +1,6 @@
+{
+  "title": "Getting Started",
+  "description": "Introduction to Magma and how to get started.",
+  "pages": ["...", "installation"],
+  "defaultOpen": true
+}

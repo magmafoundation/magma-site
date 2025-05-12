@@ -1,0 +1,276 @@
+---
+title: "Optimization"
+description: "Tips and techniques for improving server performance with Magma"
+---
+
+# Optimizing Your Magma Server
+
+Running a Minecraft server with both NeoForge mods and Bukkit plugins can be resource-intensive. This guide provides strategies and tips to optimize your Magma server for better performance.
+
+## Understanding Performance Bottlenecks
+
+Minecraft servers typically face bottlenecks in these areas:
+
+- **CPU**: Single-threaded performance is crucial for Minecraft
+- **RAM**: Insufficient memory causes lag spikes and chunk loading issues
+- **Disk I/O**: Slow storage affects world saving and chunk loading
+- **Network**: High latency or packet loss causes rubber-banding and delays
+
+## JVM Optimization
+
+### Choosing the Right Java Version
+
+For Magma servers running Minecraft 1.16+:
+- Use Java 21 or newer for best performance
+- Avoid outdated Java versions
+
+### Optimized JVM Flags
+
+For servers with 4-8GB RAM allocation:
+
+```bash
+java -Xms4G -Xmx4G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -jar magma-server.jar nogui
+```
+
+For servers with 8-16GB RAM allocation:
+
+```bash
+java -Xms8G -Xmx8G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=40 -XX:G1MaxNewSizePercent=50 -XX:G1HeapRegionSize=16M -XX:G1ReservePercent=15 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=20 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -jar magma-server.jar nogui
+```
+
+### Key JVM Flags Explained
+
+- **-Xms/-Xmx**: Minimum and maximum memory allocation
+- **-XX:+UseG1GC**: Use the Garbage-First (G1) garbage collector
+- **-XX:MaxGCPauseMillis**: Target pause time for garbage collection
+- **-XX:+AlwaysPreTouch**: Pre-touch all memory pages to avoid lag spikes
+
+## Optimizing Server Configuration
+
+### server.properties
+
+```properties
+# Reduce view distance to reduce load
+view-distance=8
+simulation-distance=6
+
+# Reduce entity activation range
+entity-activation-range=16
+
+# Optimize chunk loading
+max-tick-time=60000
+network-compression-threshold=256
+
+# Other performance settings
+spawn-protection=16
+max-players=20
+```
+
+### spigot.yml
+
+```yaml
+settings:
+  save-user-cache-on-stop-only: true
+  
+world-settings:
+  default:
+    # Entity activation ranges
+    entity-activation-range:
+      animals: 16
+      monsters: 24
+      raiders: 48
+      misc: 8
+      villagers: 16
+    
+    # Tick rates
+    tick-rates:
+      hopper-transfer: 8
+      hopper-check: 8
+    
+    # Chunk settings
+    mob-spawn-range: 6
+    merge-radius:
+      item: 2.5
+      exp: 3.0
+    
+    # Disable unnecessary features if not needed
+    dragon-death-sound-radius: 0
+    
+    # Other optimizations
+    item-despawn-rate: 6000
+    arrow-despawn-rate: 300
+    enable-zombie-pigmen-portal-spawns: false
+```
+
+### bukkit.yml
+
+```yaml
+settings:
+  spawn-limits:
+    monsters: 50
+    animals: 10
+    water-animals: 5
+    ambient: 5
+  chunk-gc:
+    period-in-ticks: 600
+  ticks-per:
+    animal-spawns: 400
+    monster-spawns: 2
+    water-spawns: 400
+    ambient-spawns: 400
+    autosave: 6000
+```
+
+## Mod Management and Plugin Optimization
+
+### Reducing Mod Count
+
+More mods = more resource usage. Consider:
+- Removing unused mods
+- Using all-in-one mods instead of multiple small mods
+- Carefully selecting which mods to include
+
+### Performance-Enhancing Plugins
+
+Add these plugins to improve performance:
+- **Clearlagg**: Removes entities and limits mob spawning
+- **FastChunkPreGen**: Pre-generates chunks to avoid lag during exploration
+- **Spark**: Performance profiling to identify issues
+- **EntityTrackerFixer**: Fixes entity tracking issues
+
+### Configuring Plugins for Performance
+
+Common plugin optimizations:
+- Reduce backup frequency
+- Disable features you don't need
+- Set reasonable limits for entities, hoppers, etc.
+- Use lightweight alternatives for resource-heavy plugins
+
+## World Optimization
+
+### Pre-generating the World
+
+Pre-generate your world to avoid lag when players explore:
+
+```bash
+# Using Bukkit plugin WorldBorder
+/wb <world> setcorners <x1> <z1> <x2> <z2>
+/wb <world> fill [chunk-count]
+```
+
+### World Border
+
+Set a reasonable world border to prevent excessive exploration:
+
+```bash
+/worldborder set <diameter>
+```
+
+### Chunk Loading Optimization
+
+- Use a plugin like Chunky to pre-generate chunks
+- Consider using a plugin with chunk loading management
+
+## Resource Monitoring
+
+### CPU Monitoring
+
+Watch CPU usage to identify lag sources:
+- Use plugins like Spark or Timings
+- Check the console for TPS (Ticks Per Second)
+
+Example with Spark:
+```bash
+/spark profiler --timeout 60
+```
+
+### Memory Monitoring
+
+Monitor memory usage to prevent crashes:
+- Watch for garbage collection (GC) frequency
+- Check for memory leaks with plugins like Spark
+
+### Disk I/O Monitoring
+
+Check disk activity:
+- Move world files to an SSD if possible
+- Reduce autosave frequency for less disk activity
+
+## Network Optimization
+
+### Reducing Network Load
+
+- Set a reasonable `network-compression-threshold` (256 is good)
+- Use a plugin like ProtocolLib to optimize packet handling
+- Consider a rate limiter for connections
+
+### Anti-DDoS Measures
+
+- Consider a proxy like BungeeCord/Waterfall or Velocity
+- Use plugins with anti-bot features
+- Set up firewall rules to prevent attacks
+
+## Regular Maintenance
+
+### World Cleaning
+
+Regularly clean up your world:
+- Remove unused player data
+- Delete old backup files
+- Clear logs periodically
+
+### Chunk Reset
+
+Reset infrequently visited chunks:
+- Use plugins to detect and reset chunks with issues
+- Clear unused chunks to reduce world size
+
+### Database Optimization
+
+If using MySQL:
+- Regularly optimize tables
+- Set up proper indexing
+- Schedule database maintenance
+
+## Advanced Techniques
+
+### Server Profiling
+
+Use profiling tools to identify specific issues:
+- Spark's profiling functionality
+- Minecraft timings reports
+- Aikar's timings system
+
+### Multi-server Setup
+
+For larger communities, consider:
+- Split your server into multiple specialized servers
+- Use BungeeCord/Waterfall or Velocity to connect them
+- Dedicate servers to specific tasks (lobby, survival, creative)
+
+### OS-Level Optimization
+
+Optimize your operating system:
+- Disable unnecessary services
+- Prioritize Minecraft server process
+- Use a server-focused Linux distro
+
+## Optimization Checklist
+
+Before deploying your server:
+
+1. ✅ Set optimal JVM flags
+2. ✅ Configure server.properties, spigot.yml, and bukkit.yml
+3. ✅ Install performance-enhancing plugins
+4. ✅ Pre-generate your world
+5. ✅ Set up monitoring tools
+6. ✅ Implement backup solutions
+7. ✅ Test with varying player counts
+8. ✅ Create a maintenance schedule
+
+## Next Steps
+
+After optimizing your server, you might want to:
+- Learn about [server wrappers](/docs/guides/server-wrappers) for better management
+- Explore [advanced plugin configuration](/docs/guides/plugin-config)
+- Check out [troubleshooting](/docs/reference/troubleshooting) for common issues

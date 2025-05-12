@@ -1,0 +1,76 @@
+---
+title: "Installation"
+description: "Learn how to install Magma on your server"
+---
+
+# Installing Magma
+
+This guide will walk you through the process of installing Magma on your server. Magma combines the functionality of NeoForge mods and Bukkit plugins, giving you the best of both worlds for your Minecraft server.
+
+## System Requirements
+
+Before installing Magma, ensure your system meets the following requirements:
+
+- **Java**: Java 21 or newer is required
+- **RAM**: Minimum 4GB RAM recommended (more for larger modpacks)
+- **CPU**: Dual-core processor or better recommended
+- **Storage**: At least 2GB available for the server (more for mods and world data)
+- **Network**: Stable internet connection with port forwarding capability
+
+## Download and Install Magma
+
+Magma now offers a simplified installation process using an installer. Follow these steps to install Magma:
+
+1. Visit the [Magma downloads page](https://magmafoundation.org/downloads) or [GitHub releases](https://github.com/magmafoundation/Magma-Neo/releases)
+2. Download the latest installer (e.g., `magma-21.1.29-beta-installer.jar`)
+3. Create a new folder for your Magma server
+
+## Installation Steps
+
+### Universal Installation (Windows, Linux, macOS)
+
+1. Move the downloaded installer (e.g., `magma-21.1.29-beta-installer.jar`) to your server folder
+2. Run the installer with the following command:
+
+```bash
+java -jar magma-21.1.29-beta-installer.jar --installServer
+```
+
+3. The installer will set up everything needed for your Magma server
+
+### Running the Server
+
+#### Windows
+
+After installation is complete, run the server using the provided batch file:
+
+```bat
+start.bat
+```
+
+#### Linux/macOS
+
+After installation is complete, run the server using the provided shell script:
+
+```bash
+chmod +x run.sh  # Make the script executable (first time only)
+./run.sh
+```
+
+## First-Time Setup
+
+When you start the Magma server for the first time:
+
+1. The server will generate configuration files and then stop
+2. Edit the `eula.txt` file and change `eula=false` to `eula=true` to accept the Minecraft End User License Agreement
+3. Start the server again using the appropriate script for your operating system
+4. The server will fully start up and generate the world
+
+## Next Steps
+
+Now that your Magma server is installed, you can:
+
+- Learn how to [add mods](/docs/guides/adding-mods) to your server
+- Set up [Bukkit plugins](/docs/guides/adding-plugins) for enhanced functionality
+
+If you encounter any issues during installation, see our [troubleshooting](/docs/reference/troubleshooting) guide.

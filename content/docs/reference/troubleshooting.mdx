@@ -1,0 +1,358 @@
+---
+title: "Troubleshooting"
+description: "Solutions for common issues with Magma servers"
+---
+
+# Troubleshooting Magma Servers
+
+This guide covers common issues that you might encounter when running a Magma server, along with their solutions. If you're experiencing problems not addressed here, please check our [Discord server](https://discord.gg/magma) or [GitHub issues](https://github.com/magmafoundation/Magma-Neo/issues).
+
+## Server Startup Issues
+
+### Server Won't Start
+
+**Symptoms:** The server fails to start, terminal closes immediately, or you see a "Java not found" error.
+
+**Possible Causes and Solutions:**
+
+1. **Java not installed correctly**
+   - Make sure you have Java 21 or newer installed
+   - Verify with: `java -version`
+   - Install from [Adoptium](https://adoptium.net/) if needed
+
+2. **Incorrect Java version**
+   - Magma requires Java 21 or newer
+   - If using multiple Java versions, specify the path in your start script
+
+3. **Insufficient permissions**
+   - Ensure you have permissions to execute the JAR file
+   - Try running as administrator/sudo
+
+4. **Corrupted Magma JAR file**
+   - Re-download the Magma server JAR file
+   - Verify file integrity with SHA-256 checksum
+
+### EULA Not Accepted
+
+**Symptoms:** Server starts but immediately shuts down with an EULA message.
+
+**Solution:**
+1. Open `eula.txt` in your server directory
+2. Change `eula=false` to `eula=true`
+3. Save the file and restart the server
+
+### Port Already in Use
+
+**Symptoms:** You see "Address already in use" or "Failed to bind to port" errors.
+
+**Solutions:**
+1. **Check for running Minecraft servers**
+   - Use `netstat -ano | grep 25565` (Linux/macOS) or `netstat -ano | findstr 25565` (Windows)
+   - Stop any processes using port 25565 (or your chosen port)
+
+2. **Change the port**
+   - Edit `server-port` in `server.properties`
+   - Choose a different port like 25566
+
+### Crash on Startup
+
+**Symptoms:** Server crashes during startup with stack trace errors.
+
+**Solutions:**
+
+1. **Check logs**
+   - Examine `logs/latest.log` for specific error messages
+   - Look for mod/plugin conflicts or missing dependencies
+
+2. **Mod/Plugin conflicts**
+   - Start with no mods/plugins, then add them one by one
+   - Check compatibility of mods with your Minecraft version
+
+3. **Memory issues**
+   - Increase allocated memory in your startup script (e.g., `-Xmx4G` for 4GB)
+   - Ensure your system has enough available RAM
+
+4. **File corruption**
+   - Delete the `libraries` folder (Magma will redownload it)
+   - Try a fresh Magma installation
+
+## Runtime Issues
+
+### Server Lag
+
+**Symptoms:** High latency, block placement lag, TPS drops, or choppy gameplay.
+
+**Solutions:**
+
+1. **Check TPS**
+   - Use `/magma tps` to check server TPS (should be close to 20)
+   - Use `/timings` or Spark plugin for detailed performance analysis
+
+2. **Reduce view distance**
+   - Lower `view-distance` in `server.properties` (try 8-10)
+   - Reduce `simulation-distance` (try 5-6)
+
+3. **Entity management**
+   - Use `/magma entities` to see entity counts
+   - Install entity management plugins like ClearLagg
+   - Adjust spawn rates in `bukkit.yml`
+
+4. **Optimize JVM flags**
+   - Use G1GC garbage collector (see our [Optimization Guide](/docs/guides/optimization))
+   - Allocate appropriate memory (don't over-allocate)
+
+5. **Investigate mods/plugins**
+   - Disable mods/plugins one by one to identify performance issues
+   - Update to latest versions
+
+### World Generation Lag
+
+**Symptoms:** Lag when players explore new areas or teleport long distances.
+
+**Solutions:**
+
+1. **Pre-generate worlds**
+   - Use plugins like Chunky or WorldBorder to pre-generate chunks
+   - Set a world border to limit exploration
+
+2. **Optimize world settings**
+   - Reduce `spawn-limits` in `bukkit.yml`
+   - Adjust entity activation ranges in `spigot.yml`
+
+### Memory Leaks
+
+**Symptoms:** RAM usage continuously increases until the server crashes.
+
+**Solutions:**
+
+1. **Monitor memory**
+   - Use `/magma heap` to monitor memory usage
+   - Install plugins like Spark for detailed memory analysis
+
+2. **Identify problematic mods/plugins**
+   - Start with minimal mods/plugins and add them back gradually
+   - Check for outdated mods/plugins known to cause memory leaks
+
+3. **Adjust JVM flags**
+   - Add `-XX:+UseG1GC -XX:+ParallelRefProcEnabled` to your startup script
+   - Consider setting `-Xms` equal to `-Xmx` to prevent heap resizing
+
+4. **Regular restarts**
+   - Schedule regular server restarts using a server wrapper
+   - Use a plugin like AutoRestart for timed restarts
+
+## Mod and Plugin Issues
+
+### Mod Not Loading
+
+**Symptoms:** Mod appears in logs but doesn't function, or doesn't appear in `/magma mods`.
+
+**Solutions:**
+
+1. **Check mod compatibility**
+   - Verify the mod is for your exact Minecraft version
+   - Ensure it's built for NeoForge (not Fabric or older Forge)
+
+2. **Missing dependencies**
+   - Look for "missing dependency" errors in logs
+   - Install required library mods and dependencies
+
+3. **Mod conflicts**
+   - Try loading the mod alone to check for conflicts
+   - Check mod configuration files for errors
+
+### Plugin Not Loading
+
+**Symptoms:** Plugin doesn't appear in `/plugins` list or commands don't work.
+
+**Solutions:**
+
+1. **Check compatibility**
+   - Ensure the plugin is compatible with your Minecraft version
+   - Check if it's designed for Bukkit/Spigot/Paper
+
+2. **Check dependencies**
+   - Look for dependency errors in server logs
+   - Install required dependency plugins (e.g., Vault, ProtocolLib)
+
+3. **API compatibility**
+   - Some plugins may use API features not supported in Magma
+   - Try alternative plugins with similar functionality
+
+### Conflict Between Mods and Plugins
+
+**Symptoms:** Server crashes, unexpected behavior, or features not working when certain mods and plugins are used together.
+
+**Solutions:**
+
+1. **Identify the conflict**
+   - Disable mods and plugins one by one to isolate the conflict
+   - Check logs for interaction errors
+
+2. **Check for feature overlap**
+   - Mods and plugins doing the same thing often conflict
+   - Use either the mod or plugin version, not both
+
+3. **Look for compatibility patches**
+   - Some mods have patches or configurations for compatibility
+   - Check mod/plugin documentation for known issues
+
+## Database Issues
+
+### Database Connection Failures
+
+**Symptoms:** Plugins that use databases fail to start or throw database connection errors.
+
+**Solutions:**
+
+1. **Check database server**
+   - Ensure your MySQL/MariaDB/etc. server is running
+   - Verify network access to the database server
+
+2. **Verify credentials**
+   - Double-check username, password, and database name
+   - Ensure the database user has necessary permissions
+
+3. **Connection settings**
+   - Check host/port settings in plugin configurations
+   - Try using IP address instead of hostname
+
+## Network Issues
+
+### Can't Connect to Server
+
+**Symptoms:** Players receive "Connection refused" or timeout errors when joining.
+
+**Solutions:**
+
+1. **Check server status**
+   - Verify the server is running with no errors
+   - Check if you can connect locally with `localhost` or `127.0.0.1`
+
+2. **Port forwarding**
+   - Ensure port 25565 (or your custom port) is forwarded to your server
+   - Check your router's port forwarding settings
+   - Verify with an online port checking tool
+
+3. **Firewall settings**
+   - Allow Java and Minecraft server through Windows Firewall
+   - Check iptables rules on Linux
+   - Disable restrictive antivirus temporarily for testing
+
+### Timeouts and Disconnections
+
+**Symptoms:** Players frequently get disconnected or experience timeouts.
+
+**Solutions:**
+
+1. **Network stability**
+   - Check your internet connection stability
+   - Try a wired connection instead of Wi-Fi for the server
+
+2. **Server performance**
+   - High server lag can cause timeouts
+   - Follow performance optimization guidelines
+
+3. **Reduce network load**
+   - Decrease `max-players` to reduce bandwidth requirements
+   - Adjust `network-compression-threshold` in `server.properties`
+
+## File and Permission Issues
+
+### World Corruption
+
+**Symptoms:** Chunks missing, blocks resetting, or "Level file cannot be read" errors.
+
+**Solutions:**
+
+1. **Restore from backup**
+   - Always maintain regular backups
+   - Restore from the most recent clean backup
+
+2. **Chunk regeneration**
+   - Use plugins like WorldEdit to regenerate corrupted chunks
+   - Be aware this will reset those chunks to newly generated state
+
+3. **Prevention**
+   - Use proper server shutdown with `/stop` command
+   - Avoid killing the server process abruptly
+   - Use a UPS for power protection
+
+### Permission Denied Errors
+
+**Symptoms:** "Access denied" or "Permission denied" errors in logs.
+
+**Solutions:**
+
+1. **File permissions**
+   - Ensure the user running the server has write access to the server directory
+   - Linux: `chmod -R 755 /path/to/server` and `chown -R username:username /path/to/server`
+
+2. **Server directory location**
+   - Avoid running the server from protected directories
+   - Use a dedicated directory with proper permissions
+
+## Advanced Troubleshooting
+
+### Generating Debug Reports
+
+For complex issues, generate debug information:
+
+1. **Timings report**
+   ```
+   /timings on
+   # Wait at least 5 minutes during normal server usage
+   /timings paste
+   ```
+
+2. **Spark profiler**
+   ```
+   /spark profiler --timeout 60
+   ```
+
+3. **Thread dump**
+   ```
+   # From console
+   dump
+   ```
+
+### Reaching Out for Help
+
+When seeking help on Discord or GitHub:
+
+1. Provide your Magma version and Minecraft version
+2. Include relevant logs (latest.log, crash reports)
+3. List all mods and plugins you're using
+4. Describe steps to reproduce the issue
+5. Share any error messages or stack traces
+
+## Common Error Messages and Solutions
+
+### "Failed to bind to address"
+- Port is already in use by another application
+- Change port in server.properties or stop the other application
+
+### "Error occurred during initialization of VM"
+- Incorrect Java arguments or not enough system memory
+- Reduce allocated memory or close other applications
+
+### "Unsupported major.minor version"
+- Using wrong Java version
+- Install Java 17 or newer for modern Minecraft versions
+
+### "Could not reserve enough space for object heap"
+- Allocating more memory than your system has available
+- Reduce `-Xmx` value in startup script
+
+### "java.lang.NoSuchMethodError" or "java.lang.ClassNotFoundException"
+- Mod/plugin compatibility issue or missing dependency
+- Update mods/plugins or install required dependencies
+
+## Next Steps
+
+If you've tried these solutions and still have issues:
+
+1. Check the [Magma GitHub Issues](https://github.com/magmafoundation/Magma-Neo/issues) for similar problems
+2. Join our [Discord server](https://discord.gg/magma) for community support
+3. For mod-specific issues, check the mod's documentation or support channels
+4. For plugin-specific issues, refer to the plugin's support resources
