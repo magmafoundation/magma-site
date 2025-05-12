@@ -15,6 +15,7 @@ export const metadata = {
   icons: {
     icon: "/magma-icon.png",
   },
+  metadataBase: new URL("https://magmafoundation.org"),
 };
 
 export default function RootLayout({
