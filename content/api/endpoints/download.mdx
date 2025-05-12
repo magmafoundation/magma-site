@@ -1,0 +1,38 @@
+---
+title: "Download API"
+description: "API endpoint to download a specific Magma version file"
+---
+
+# Download API
+
+Direct download of a specific Magma version file.
+
+## Endpoint
+
+```
+GET /api/versions/{version}/download
+```
+
+## Path Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| `version` | The specific version string (e.g., "21.1.33-beta", "20.1.0") |
+
+## Query Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `type` | string | "installer" | Type of file to download: "installer", "jar", or "changelog" |
+
+## Response
+
+This endpoint redirects to the actual file for download. No JSON response is provided unless an error occurs.
+
+## Error Responses
+
+| Status Code | Description |
+|-------------|-------------|
+| 400 | Bad Request - Missing version parameter or invalid type |
+| 404 | Not Found - The requested file was not found |
+| 500 | Server Error - Failed to process download request |

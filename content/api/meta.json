@@ -1,0 +1,7 @@
+{
+  "title": "API Reference",
+  "description": "Site API reference documentation.",
+  "pages": ["index", "endpoints"],
+  "folders": ["endpoints"],
+  "root": true
+}

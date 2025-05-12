@@ -1,0 +1,45 @@
+---
+title: "Latest Version API"
+description: "API endpoint to get information about the latest available Magma version"
+---
+
+# Latest Version API
+
+Get information about the latest available Magma version. This is a convenient way to always get the most recent version without having to know the specific version string.
+
+## Endpoint
+
+```
+GET /api/versions/latest
+```
+
+## Response
+
+```json
+{
+  "groupId": "org.magmafoundation",
+  "artifactId": "magma",
+  "version": "21.1.33-beta",
+  "minecraftVersion": "1.21.x",
+  "downloadUrl": "https://repo.magmafoundation.org/releases/org/magmafoundation/magma/21.1.33-beta/magma-21.1.33-beta.jar",
+  "installerUrl": "https://repo.magmafoundation.org/releases/org/magmafoundation/magma/21.1.33-beta/magma-21.1.33-beta-installer.jar",
+  "changelogUrl": "https://repo.magmafoundation.org/releases/org/magmafoundation/magma/21.1.33-beta/magma-21.1.33-beta-changelog.txt",
+  "isStable": false,
+  "hasServerJar": true,
+  "hasInstaller": true,
+  "hasChangelog": true,
+  "fileSize": "36.25 MB",
+  "releaseDate": "2025-04-15"
+}
+```
+
+## Response Fields
+
+The response includes all fields from the version details endpoint. See the [Version Details API](/api/endpoints/version-details) section for details about the response fields.
+
+## Error Responses
+
+| Status Code | Description |
+|-------------|-------------|
+| 404 | Not Found - No versions are available |
+| 500 | Server Error - Failed to fetch latest version |

@@ -23,7 +23,7 @@ const PAGES = [
   },
   {
     name: "API",
-    href: "/docs/reference/website-api",
+    href: "/api-docs",
     icon: <Code className="mr-1.5 h-4 w-4" />,
   },
 ];

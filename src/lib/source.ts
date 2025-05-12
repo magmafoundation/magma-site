@@ -1,8 +1,13 @@
 // .source folder will be generated when you run `next dev`
-import { docs } from "../../.source";
+import { docs, siteApi } from "../../.source";
 import { loader } from "fumadocs-core/source";
 
 export const source = loader({
   baseUrl: "/docs",
   source: docs.toFumadocsSource(),
+});
+
+export const apiDocsSource = loader({
+  baseUrl: "/api-docs",
+  source: siteApi.toFumadocsSource(),
 });

@@ -1,0 +1,60 @@
+---
+title: "Version Details API"
+description: "API endpoint to get detailed information about a specific Magma version"
+---
+
+# Version Details API
+
+Get detailed information about a specific Magma version.
+
+## Endpoint
+
+```
+GET /api/versions/{version}
+```
+
+## Path Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| `version` | The specific version string (e.g., "21.1.33-beta", "20.1.0") |
+
+## Response
+
+```json
+{
+  "groupId": "org.magmafoundation",
+  "artifactId": "magma",
+  "version": "21.1.33-beta",
+  "minecraftVersion": "1.21.x",
+  "downloadUrl": "https://repo.magmafoundation.org/releases/org/magmafoundation/magma/21.1.33-beta/magma-21.1.33-beta.jar",
+  "installerUrl": "https://repo.magmafoundation.org/releases/org/magmafoundation/magma/21.1.33-beta/magma-21.1.33-beta-installer.jar",
+  "changelogUrl": "https://repo.magmafoundation.org/releases/org/magmafoundation/magma/21.1.33-beta/magma-21.1.33-beta-changelog.txt",
+  "isStable": false,
+  "hasServerJar": true,
+  "hasInstaller": true,
+  "hasChangelog": true,
+  "fileSize": "36.25 MB",
+  "releaseDate": "2025-04-15"
+}
+```
+
+## Response Fields
+
+The response includes all fields from the version list endpoint, plus:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `hasServerJar` | boolean | Whether the server JAR file is available |
+| `hasInstaller` | boolean | Whether the installer JAR file is available |
+| `hasChangelog` | boolean | Whether the changelog file is available |
+| `fileSize` | string | Human-readable size of the installer (or JAR if installer unavailable) |
+| `releaseDate` | string | Release date in YYYY-MM-DD format |
+
+## Error Responses
+
+| Status Code | Description |
+|-------------|-------------|
+| 400 | Bad Request - Missing or invalid version parameter |
+| 404 | Not Found - The requested version was not found |
+| 500 | Server Error - Failed to fetch version details |

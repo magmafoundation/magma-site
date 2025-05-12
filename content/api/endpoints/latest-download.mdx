@@ -1,0 +1,32 @@
+---
+title: "Latest Download API"
+description: "API endpoint to download the latest Magma version file"
+---
+
+# Latest Download API
+
+Direct download of the latest Magma version file. This endpoint redirects to the actual file for the latest version.
+
+## Endpoint
+
+```
+GET /api/versions/latest/download
+```
+
+## Query Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `type` | string | "installer" | Type of file to download: "installer", "jar", or "changelog" |
+
+## Response
+
+This endpoint redirects to the actual file for download. No JSON response is provided unless an error occurs.
+
+## Error Responses
+
+| Status Code | Description |
+|-------------|-------------|
+| 400 | Bad Request - Invalid type parameter |
+| 404 | Not Found - No versions available or requested file not found |
+| 500 | Server Error - Failed to process download request |

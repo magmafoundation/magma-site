@@ -33,7 +33,25 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <RootProvider>{children}</RootProvider>
+            <RootProvider
+              search={{
+                options: {
+                  defaultTag: "docs",
+                  tags: [
+                    {
+                      name: "docs",
+                      value: "docs",
+                    },
+                    {
+                      name: "site-api",
+                      value: "site-api",
+                    },
+                  ],
+                },
+              }}
+            >
+              {children}
+            </RootProvider>
             <Toaster />
           </ThemeProvider>
         </SidebarProvider>

@@ -1,0 +1,11 @@
+{
+  "title": "API Endpoints",
+  "pages": [
+    "download",
+    "latest-download",
+    "latest-version",
+    "version-details",
+    "versions-list"
+  ],
+  "defaultOpen": true
+}
