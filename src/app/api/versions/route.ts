@@ -9,10 +9,12 @@ const MavenArtifactSchema = z.object({
   version: z.string(),
   minecraftVersion: z.string(),
   lastUpdated: z.string().optional(),
-  downloadUrl: z.string().url().optional(),
   installerUrl: z.string().url().optional(),
+  launcherUrl: z.string().url().optional(),
   changelogUrl: z.string().url().optional(),
   isStable: z.boolean().optional(),
+  hasLauncher: z.boolean().optional(),
+  hasInstaller: z.boolean().optional(),
 });
 
 // Define the query parameters schema
@@ -46,6 +48,15 @@ function extractMinecraftVersion(version: string): string {
   // Fallback to generic pattern extraction
   const match = version.match(/^(\d+\.\d+(?:\.\d+)?)/);
   return match ? match[1] : "Unknown";
+}
+
+function isVersionLowerThan21_1_41(version: string): boolean {
+  const match = version.match(/^21\.1\.(\d+)-/);
+  if (match) {
+    const minorVersion = parseInt(match[1], 10);
+    return minorVersion < 41;
+  }
+  return false;
 }
 
 async function fetchMavenVersions(): Promise<MavenArtifact[]> {
@@ -84,10 +95,15 @@ async function fetchMavenVersions(): Promise<MavenArtifact[]> {
             artifactId: "magma",
             version: version,
             minecraftVersion: minecraftVersion,
-            downloadUrl: `https://repo.magmafoundation.org/releases/org/magmafoundation/magma/${version}/magma-${version}.jar`,
             installerUrl: `https://repo.magmafoundation.org/releases/org/magmafoundation/magma/${version}/magma-${version}-installer.jar`,
+            // Launcher has the -launcher.jar suffix
+            launcherUrl: `https://repo.magmafoundation.org/releases/org/magmafoundation/magma/${version}/magma-${version}-launcher.jar`,
             changelogUrl: `https://repo.magmafoundation.org/releases/org/magmafoundation/magma/${version}/magma-${version}-changelog.txt`,
             isStable: isStable,
+            // All versions have installer
+            hasInstaller: true,
+            // Only versions 1.40-beta and above have launcher
+            hasLauncher: !isVersionLowerThan21_1_41(version),
           };
 
           // Validate the artifact with Zod
@@ -144,10 +160,13 @@ async function fetchMavenVersions(): Promise<MavenArtifact[]> {
               artifactId: "magma",
               version: version,
               minecraftVersion: minecraftVersion,
-              downloadUrl: `https://repo.magmafoundation.org/releases/org/magmafoundation/magma/${version}/magma-${version}.jar`,
               installerUrl: `https://repo.magmafoundation.org/releases/org/magmafoundation/magma/${version}/magma-${version}-installer.jar`,
+              launcherUrl: `https://repo.magmafoundation.org/releases/org/magmafoundation/magma/${version}/magma-${version}-launcher.jar`,
               changelogUrl: `https://repo.magmafoundation.org/releases/org/magmafoundation/magma/${version}/magma-${version}-changelog.txt`,
               isStable: isStable,
+              hasInstaller: true,
+              // Only versions 1.40-beta and above have launcher
+              hasLauncher: !isVersionLowerThan21_1_41(version),
             };
 
             // Validate the artifact with Zod

@@ -27,11 +27,11 @@ GET /api/versions/{version}
   "artifactId": "magma",
   "version": "21.1.33-beta",
   "minecraftVersion": "1.21.x",
-  "downloadUrl": "https://repo.magmafoundation.org/releases/org/magmafoundation/magma/21.1.33-beta/magma-21.1.33-beta.jar",
   "installerUrl": "https://repo.magmafoundation.org/releases/org/magmafoundation/magma/21.1.33-beta/magma-21.1.33-beta-installer.jar",
+  "launcherUrl": "https://repo.magmafoundation.org/releases/org/magmafoundation/magma/21.1.33-beta/magma-21.1.33-beta-launcher.jar",
   "changelogUrl": "https://repo.magmafoundation.org/releases/org/magmafoundation/magma/21.1.33-beta/magma-21.1.33-beta-changelog.txt",
   "isStable": false,
-  "hasServerJar": true,
+  "hasLauncher": true,
   "hasInstaller": true,
   "hasChangelog": true,
   "fileSize": "36.25 MB",
@@ -45,7 +45,7 @@ The response includes all fields from the version list endpoint, plus:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `hasServerJar` | boolean | Whether the server JAR file is available |
+| `hasLauncher` | boolean | Whether the launcher functionality is available (for versions 1.40-beta and above) |
 | `hasInstaller` | boolean | Whether the installer JAR file is available |
 | `hasChangelog` | boolean | Whether the changelog file is available |
 | `fileSize` | string | Human-readable size of the installer (or JAR if installer unavailable) |

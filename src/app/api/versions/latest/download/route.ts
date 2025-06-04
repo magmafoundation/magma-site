@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { getBaseUrl } from "@/lib/baseurl";
 
 // Define a schema for download type validation
-const DownloadTypeSchema = z.enum(["jar", "installer", "changelog"]);
+const DownloadTypeSchema = z.enum(["jar", "installer", "launcher", "changelog"]);
 
 // Define Zod schema for the versions API response
 const VersionsResponseSchema = z.object({
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     const baseUrl = getBaseUrl(requestHeaders);
 
     const { searchParams } = new URL(request.url);
-    const type = searchParams.get("type") || "installer"; // Default to installer
+    const type = searchParams.get("type") || "launcher"; // Default to launcher
 
     // Validate type parameter using Zod
     const typeResult = DownloadTypeSchema.safeParse(type);
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error:
-            "Invalid type parameter. Must be one of: jar, installer, changelog",
+            "Invalid type parameter. Must be one of: jar, installer, launcher, changelog",
           details: typeResult.error.format(),
         },
         { status: 400 }

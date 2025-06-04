@@ -56,9 +56,17 @@ export default function DownloadsPage() {
           <AlertDescription>
             <ul className="list-disc pl-5 mt-2 space-y-1">
               <li>
-                <strong>Installer JAR</strong> - Recommended for most users.
-                This file helps set up your Magma server with a guided
-                installation process.
+                <strong>Launcher JAR</strong> -{" "}
+                <span className="text-orange-600 dark:text-orange-400">
+                  Available for versions 1.40-beta and above
+                </span>
+                . This jar file (with the <code>-launcher.jar</code> suffix)
+                includes built-in launcher functionality.
+              </li>
+              <li>
+                <strong>Installer JAR</strong> - Used for all versions. This
+                file helps set up your Magma server with a guided installation
+                process.
               </li>
               <li>
                 <strong>Changelog</strong> - View the changes and updates for

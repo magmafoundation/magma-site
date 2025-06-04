@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 // Define schemas for validation
-const DownloadTypeSchema = z.enum(["jar", "installer", "changelog"]);
+const DownloadTypeSchema = z.enum(["jar", "installer", "launcher", "changelog"]);
 
 const VersionParamsSchema = z.object({
   version: z.string().min(1),
@@ -38,7 +38,7 @@ export async function GET(
       return NextResponse.json(
         {
           error:
-            "Invalid type parameter. Must be one of: jar, installer, changelog",
+            "Invalid type parameter. Must be one of: jar, installer, launcher, changelog",
           details: typeResult.error.format(),
         },
         { status: 400 }
@@ -53,7 +53,11 @@ export async function GET(
 
     // Determine which file to redirect to based on the type
     if (downloadType === "jar") {
+      // Regular server JAR
       redirectUrl = `${baseUrl}.jar`;
+    } else if (downloadType === "launcher") {
+      // Launcher has -launcher.jar suffix
+      redirectUrl = `${baseUrl}-launcher.jar`;
     } else if (downloadType === "installer") {
       redirectUrl = `${baseUrl}-installer.jar`;
     } else if (downloadType === "changelog") {
@@ -75,8 +79,8 @@ export async function GET(
     const fileExists = fileExistsResponse.ok;
 
     if (!fileExists) {
-      // If installer doesn't exist but type is installer, try to fall back to jar
-      if (downloadType === "installer") {
+      // If launcher doesn't exist, try to fall back to jar
+      if (downloadType === "launcher") {
         const jarUrl = `${baseUrl}.jar`;
         const jarCheckRequest = new Request(jarUrl, {
           method: "HEAD",
@@ -95,7 +99,7 @@ export async function GET(
           // If jar exists, redirect to it instead
           redirectUrl = jarUrl;
         } else {
-          // Neither installer nor jar exists
+          // No download option exists for this version
           return NextResponse.json(
             { error: `No download available for version ${version}` },
             { status: 404 }

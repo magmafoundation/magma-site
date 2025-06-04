@@ -18,13 +18,14 @@ interface LatestVersion {
   version: string;
   minecraftVersion: string;
   installerUrl?: string;
+  launcherUrl?: string;
   downloadUrl?: string;
   changelogUrl?: string;
   isStable: boolean;
   fileSize?: string;
   releaseDate?: string;
-  hasServerJar?: boolean;
   hasInstaller?: boolean;
+  hasLauncher?: boolean;
   hasChangelog?: boolean;
 }
 
@@ -144,39 +145,26 @@ export function LatestVersionDownload() {
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="pt-6">
+      <CardContent>
         <div className="flex flex-col gap-3">
-          {latestVersion.hasInstaller || latestVersion.installerUrl ? (
-            <Button
-              size="lg"
-              className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
-              asChild
-            >
+          {latestVersion.hasLauncher || latestVersion.launcherUrl ? (
+            <Button size="lg" asChild>
               <Link
-                href="/api/versions/latest/download?type=installer"
+                href="/api/versions/latest/download?type=launcher"
                 rel="noopener noreferrer"
               >
-                <Download className="mr-2 h-5 w-5" /> Download Installer
+                <Download className="mr-2 h-5 w-5" /> Download Launcher
               </Link>
             </Button>
-          ) : latestVersion.hasServerJar || latestVersion.downloadUrl ? (
-            <Button
-              size="lg"
-              className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
-              asChild
-            >
-              <Link
-                href="/api/versions/latest/download?type=jar"
-                rel="noopener noreferrer"
-              >
-                <Download className="mr-2 h-5 w-5" /> Download Server JAR
-              </Link>
-            </Button>
-          ) : (
-            <Button size="lg" className="w-full" disabled>
-              <Download className="mr-2 h-5 w-5" /> Not Available
-            </Button>
-          )}
+          ) : null}
+
+          {/* Not available message as last resort */}
+          {!latestVersion.installerUrl &&
+            (!latestVersion.hasLauncher || !latestVersion.launcherUrl) && (
+              <Button size="lg" className="w-full" disabled>
+                <Download className="mr-2 h-5 w-5" /> Not Available
+              </Button>
+            )}
 
           {(latestVersion.hasChangelog || latestVersion.changelogUrl) && (
             <Button size="sm" variant="outline" className="w-full" asChild>

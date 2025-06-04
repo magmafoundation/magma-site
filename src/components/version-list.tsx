@@ -28,12 +28,13 @@ interface MavenArtifact {
   lastUpdated?: string;
   downloadUrl?: string;
   installerUrl?: string;
+  launcherUrl?: string;
   changelogUrl?: string;
   isStable?: boolean;
   fileSize?: string;
   releaseDate?: string;
-  hasServerJar?: boolean;
   hasInstaller?: boolean;
+  hasLauncher?: boolean;
   hasChangelog?: boolean;
 }
 
@@ -379,23 +380,27 @@ function VersionTable({
             </TableCell>
             <TableCell className="text-right">
               <div className="flex flex-wrap gap-2 justify-end">
-                {artifact.installerUrl && (
+                {artifact.launcherUrl && artifact.hasLauncher && (
                   <Button size="sm" asChild>
+                    <a
+                      href={`/api/versions/${artifact.version}/download?type=launcher`}
+                      title="Download Launcher"
+                    >
+                      Launcher
+                    </a>
+                  </Button>
+                )}
+                {artifact.installerUrl && (
+                  <Button
+                    size="sm"
+                    variant={artifact.hasLauncher ? "secondary" : "default"}
+                    asChild
+                  >
                     <a
                       href={`/api/versions/${artifact.version}/download?type=installer`}
                       title="Download Installer"
                     >
                       Installer
-                    </a>
-                  </Button>
-                )}
-                {artifact.downloadUrl && !artifact.installerUrl && (
-                  <Button size="sm" asChild>
-                    <a
-                      href={`/api/versions/${artifact.version}/download?type=jar`}
-                      title="Download JAR"
-                    >
-                      Server JAR
                     </a>
                   </Button>
                 )}
@@ -409,9 +414,10 @@ function VersionTable({
                     </a>
                   </Button>
                 )}
-                {!artifact.installerUrl && !artifact.downloadUrl && (
-                  <span className="text-muted-foreground">Not available</span>
-                )}
+                {!artifact.installerUrl &&
+                  (!artifact.launcherUrl || !artifact.hasLauncher) && (
+                    <span className="text-muted-foreground">Not available</span>
+                  )}
               </div>
             </TableCell>
           </TableRow>

@@ -19,15 +19,24 @@ Before installing Magma, ensure your system meets the following requirements:
 
 ## Download and Install Magma
 
-Magma now offers a simplified installation process using an installer. Follow these steps to install Magma:
+Magma offers two main ways to install:
 
-1. Visit the [Magma downloads page](https://magmafoundation.org/downloads) 
-2. Download the latest installer (e.g., `magma-21.1.29-beta-installer.jar`)
+### Option 1: Using the Installer (Recommended)
+
+1. Visit the [Magma downloads page](https://magmafoundation.org/downloads)
+2. Download the installer (e.g., `magma-21.1.29-beta-installer.jar`)
 3. Create a new folder for your Magma server
+
+### Option 2: Using the Launcher (For versions 1.40-beta and above)
+
+1. Visit the [Magma downloads page](https://magmafoundation.org/downloads)
+2. Look for the orange "Launcher" button for versions 1.40-beta and above
+3. Download the launcher JAR file (with the `-launcher.jar` suffix)
+4. Create a new folder for your Magma server
 
 ## Installation Steps
 
-### Universal Installation (Windows, Linux, macOS)
+### Installer Method (All Versions)
 
 1. Move the downloaded installer (e.g., `magma-21.1.29-beta-installer.jar`) to your server folder
 2. Run the installer with the following command:
@@ -37,6 +46,17 @@ java -jar magma-21.1.29-beta-installer.jar --installServer
 ```
 
 3. The installer will set up everything needed for your Magma server
+
+### Launcher Method (Version 1.40-beta and above)
+
+1. Move the downloaded launcher JAR (e.g., `magma-21.1.29-beta-launcher.jar`) to your server folder
+2. Run the launcher directly with:
+
+```bash
+java -jar magma-21.1.29-beta-launcher.jar
+```
+
+3. The launcher will guide you through the setup process
 
 ### Running the Server
 

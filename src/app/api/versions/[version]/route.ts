@@ -9,11 +9,11 @@ const MavenArtifactSchema = z.object({
   version: z.string(),
   minecraftVersion: z.string(),
   lastUpdated: z.string().optional(),
-  downloadUrl: z.string().url().optional(),
   installerUrl: z.string().url().optional(),
+  launcherUrl: z.string().url().optional(),
   changelogUrl: z.string().url().optional(),
   isStable: z.boolean().optional(),
-  hasServerJar: z.boolean().optional(),
+  hasLauncher: z.boolean().optional(),
   hasInstaller: z.boolean().optional(),
   hasChangelog: z.boolean().optional(),
   fileSize: z.string().optional(),
@@ -91,6 +91,15 @@ async function getFileSize(url: string): Promise<string | undefined> {
   }
 }
 
+function isVersionLowerThan21_1_41(version: string): boolean {
+  const match = version.match(/^21\.1\.(\d+)-/);
+  if (match) {
+    const minorVersion = parseInt(match[1], 10);
+    return minorVersion < 41;
+  }
+  return false;
+}
+
 // Function to get release date from Maven metadata
 async function getReleaseDate(version: string): Promise<string | undefined> {
   try {
@@ -134,21 +143,25 @@ async function getVersionDetails(
 
     const baseUrl = `https://repo.magmafoundation.org/releases/org/magmafoundation/magma/${version}/magma-${version}`;
     const jarUrl = `${baseUrl}.jar`;
+    const launcherJarUrl = `${baseUrl}-launcher.jar`; // The launcher has the -launcher.jar suffix
     const installerUrl = `${baseUrl}-installer.jar`;
     const changelogUrl = `${baseUrl}-changelog.txt`;
 
     // Check if files exist
-    const [hasServerJar, hasInstaller, hasChangelog] = await Promise.all([
+    const [hasJar, hasInstaller, hasChangelog] = await Promise.all([
       checkFileExists(jarUrl),
       checkFileExists(installerUrl),
       checkFileExists(changelogUrl),
     ]);
 
+    // For versions 1.40-beta and above, jar is considered a launcher
+    const hasLauncher = !isVersionLowerThan21_1_41(version)
+
     // Get file sizes for available files
     let fileSize;
     if (hasInstaller) {
       fileSize = await getFileSize(installerUrl);
-    } else if (hasServerJar) {
+    } else if (hasJar) {
       fileSize = await getFileSize(jarUrl);
     }
 
@@ -160,11 +173,11 @@ async function getVersionDetails(
       artifactId: "magma",
       version,
       minecraftVersion,
-      downloadUrl: hasServerJar ? jarUrl : undefined,
       installerUrl: hasInstaller ? installerUrl : undefined,
+      launcherUrl: hasLauncher ? launcherJarUrl : undefined,
       changelogUrl: hasChangelog ? changelogUrl : undefined,
       isStable,
-      hasServerJar,
+      hasLauncher,
       hasInstaller,
       hasChangelog,
       fileSize,
