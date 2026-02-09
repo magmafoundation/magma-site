@@ -10,6 +10,7 @@
         "format": "biome format --write .",
         "format:check": "biome format .",
         "check": "biome check --write .",
+        "test": "vitest run",
         "postinstall": "fumadocs-mdx"
     },
     "dependencies": {
@@ -78,7 +79,8 @@
         "@types/react-dom": "^19.2.3",
         "postcss": "^8.5.3",
         "tailwindcss": "^4.1.6",
-        "typescript": "^5.8.3"
+        "typescript": "^5.8.3",
+        "vitest": "^4.0.18"
     },
     "engines": {
         "node": ">=20.0.0"

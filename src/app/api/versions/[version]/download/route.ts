@@ -1,110 +1,47 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { checkFileExists, getDownloadUrl } from "@/lib/maven";
 
-// Define schemas for validation
-const DownloadTypeSchema = z.enum([
-    "jar",
-    "installer",
-    "launcher",
-    "changelog",
-]);
-
-const VersionParamsSchema = z.object({
-    version: z.string().min(1),
-});
+const ParamsSchema = z.object({ version: z.string().min(1) });
+const TypeSchema = z.enum(["jar", "installer", "launcher", "changelog"]);
 
 export async function GET(
     request: NextRequest,
     context: { params: Promise<{ version: string }> },
 ) {
-    const versionParams = await context.params;
+    const params = await context.params;
     try {
-        // Validate the version parameter
-        const paramsResult = VersionParamsSchema.safeParse(versionParams);
+        const vResult = ParamsSchema.safeParse(params);
+        if (!vResult.success) {
+            return NextResponse.json(
+                { error: "Invalid version parameter" },
+                { status: 400 },
+            );
+        }
 
-        if (!paramsResult.success) {
+        const type = request.nextUrl.searchParams.get("type") || "installer";
+        const tResult = TypeSchema.safeParse(type);
+        if (!tResult.success) {
             return NextResponse.json(
                 {
-                    error: "Invalid version parameter",
-                    details: paramsResult.error.format(),
+                    error: "Invalid type. Must be: jar, installer, launcher, changelog",
                 },
                 { status: 400 },
             );
         }
 
-        const { version } = paramsResult.data;
-        const { searchParams } = new URL(request.url);
-        const type = searchParams.get("type") || "installer"; // Default to installer
+        const { version } = vResult.data;
+        const downloadType = tResult.data;
+        let url = getDownloadUrl(version, downloadType);
 
-        // Validate download type
-        const typeResult = DownloadTypeSchema.safeParse(type);
-
-        if (!typeResult.success) {
-            return NextResponse.json(
-                {
-                    error: "Invalid type parameter. Must be one of: jar, installer, launcher, changelog",
-                    details: typeResult.error.format(),
-                },
-                { status: 400 },
-            );
-        }
-
-        const baseUrl = `https://repo.magmafoundation.org/releases/org/magmafoundation/magma/${version}/magma-${version}`;
-        let redirectUrl = "";
-
-        // Get validated download type
-        const downloadType = typeResult.data;
-
-        // Determine which file to redirect to based on the type
-        if (downloadType === "jar") {
-            // Regular server JAR
-            redirectUrl = `${baseUrl}.jar`;
-        } else if (downloadType === "launcher") {
-            // Launcher has -launcher.jar suffix
-            redirectUrl = `${baseUrl}-launcher.jar`;
-        } else if (downloadType === "installer") {
-            redirectUrl = `${baseUrl}-installer.jar`;
-        } else if (downloadType === "changelog") {
-            redirectUrl = `${baseUrl}-changelog.txt`;
-        }
-
-        // Check if the file exists with caching
-        const fileExistsCheckRequest = new Request(redirectUrl, {
-            method: "HEAD",
-            headers: {
-                "User-Agent": "Mozilla/5.0 (compatible; MagmaNeoWebsite/1.0)",
-            },
-        });
-
-        const fileExistsResponse = await fetch(fileExistsCheckRequest, {
-            next: { revalidate: 3600 }, // Cache existence check for 1 hour
-        });
-
-        const fileExists = fileExistsResponse.ok;
-
-        if (!fileExists) {
-            // If launcher doesn't exist, try to fall back to jar
+        const exists = await checkFileExists(url);
+        if (!exists) {
+            // Launcher fallback: try regular jar
             if (downloadType === "launcher") {
-                const jarUrl = `${baseUrl}.jar`;
-                const jarCheckRequest = new Request(jarUrl, {
-                    method: "HEAD",
-                    headers: {
-                        "User-Agent":
-                            "Mozilla/5.0 (compatible; MagmaNeoWebsite/1.0)",
-                    },
-                });
-
-                const jarCheckResponse = await fetch(jarCheckRequest, {
-                    next: { revalidate: 3600 }, // Cache existence check for 1 hour
-                });
-
-                const jarExists = jarCheckResponse.ok;
-
-                if (jarExists) {
-                    // If jar exists, redirect to it instead
-                    redirectUrl = jarUrl;
+                const jarUrl = getDownloadUrl(version, "jar");
+                if (await checkFileExists(jarUrl)) {
+                    url = jarUrl;
                 } else {
-                    // No download option exists for this version
                     return NextResponse.json(
                         {
                             error: `No download available for version ${version}`,
@@ -113,7 +50,6 @@ export async function GET(
                     );
                 }
             } else {
-                // The requested file type doesn't exist
                 return NextResponse.json(
                     {
                         error: `${downloadType} file not found for version ${version}`,
@@ -123,20 +59,11 @@ export async function GET(
             }
         }
 
-        // Track download analytics if needed
-        // ...
-
-        // Redirect to the download URL with cache control headers
-        return NextResponse.redirect(redirectUrl, {
-            headers: {
-                "Cache-Control": "public, max-age=3600, s-maxage=3600",
-            },
+        return NextResponse.redirect(url, {
+            headers: { "Cache-Control": "public, max-age=3600, s-maxage=3600" },
         });
     } catch (error) {
-        console.error(
-            `Error in download API for ${versionParams.version}:`,
-            error,
-        );
+        console.error(`Error in download API for ${params.version}:`, error);
         return NextResponse.json(
             { error: "Failed to process download request" },
             { status: 500 },

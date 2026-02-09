@@ -25,15 +25,17 @@ interface VersionsByMinecraft {
 }
 
 function getMinecraftVersion(version: string): string {
-    if (version.startsWith("21.")) return "1.21.x";
-    if (version.includes("-")) {
-        const parts = version.split("-");
-        if (parts.length > 0 && parts[0].match(/^\d+\.\d+(\.\d+)?$/)) {
-            return parts[0];
-        }
-    }
-    const match = version.match(/^(\d+\.\d+(?:\.\d+)?)/);
-    return match ? match[1] : "Unknown";
+    const match = version.match(/^(\d+)\.(\d+)/);
+    if (!match) return "Unknown";
+
+    const major = parseInt(match[1], 10);
+    const minor = match[2];
+
+    // Year-based MC versioning (26.0, 26.1, ...)
+    if (major >= 26) return `${major}.${minor}`;
+
+    // Legacy MC versioning (1.21.x, 1.20.x, ...)
+    return `1.${major}.x`;
 }
 
 export function VersionList() {
