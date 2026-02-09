@@ -4,6 +4,7 @@ import { RootProvider } from "fumadocs-ui/provider/next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import SearchDialog from "@/components/search-dialog";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,7 +37,7 @@ export default function RootLayout({
                         SearchDialog,
                     }}
                 >
-                    {children}
+                    <TooltipProvider>{children}</TooltipProvider>
                     <Toaster />
                 </RootProvider>
             </body>

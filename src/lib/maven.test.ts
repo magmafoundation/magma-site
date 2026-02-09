@@ -218,8 +218,8 @@ describe("fetchVersionDetails", () => {
                 typeof input === "string"
                     ? input
                     : input instanceof URL
-                        ? input.toString()
-                        : input.url;
+                      ? input.toString()
+                      : input.url;
 
             // installer HEAD check — exists
             if (url.includes("-installer.jar")) {
