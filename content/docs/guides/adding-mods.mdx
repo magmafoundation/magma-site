@@ -1,176 +1,46 @@
 ---
-title: "Adding Mods"
-description: "Learn how to add and manage NeoForge mods on your Magma server"
+title: Adding Mods
+description: "Install NeoForge mods on your Magma server"
 ---
 
-# Adding NeoForge Mods to Magma
+# Adding Mods
 
-One of Magma's key features is its ability to run NeoForge mods alongside Bukkit plugins. This guide will walk you through the process of adding and managing mods on your Magma server.
+Magma runs NeoForge mods. Make sure mods match your Minecraft version.
 
-## Understanding Mod Compatibility
-
-Before adding mods, it's important to understand:
-
-- Magma works with NeoForge mods (not Fabric mods)
-- Mods must match your Minecraft and NeoForge version
-- Some mods may conflict with certain Bukkit plugins
-
-## Finding Compatible Mods
-
-Good sources for NeoForge mods include:
+## Where to Find Mods
 
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods)
 - [Modrinth](https://modrinth.com/mods)
-- [NeoForged Forums](https://forums.neoforged.net/)
 
-Always check that the mod:
-- Supports your exact Minecraft version
-- Is built for NeoForge (not Fabric)
-- Has server-side functionality (if you want it to work on the server)
+Check that each mod supports your Minecraft version and is built for NeoForge.
 
-## Installing Mods
-
-### Basic Installation
-
-1. Download the mod's `.jar` file
-2. Stop your Magma server if it's running
-3. Place the `.jar` file in the `mods` folder in your server directory
-4. Start your server
-
-Example terminal commands:
-
-```bash
-# Copy mod to mods folder
-cp ~/downloads/awesome-mod-1.0.jar ~/minecraft-server/mods/
-# Start server
-cd ~/minecraft-server
-./run.sh
-```
-
-### Client-Side vs. Server-Side Mods
-
-- **Server-Side Mods**: These run on the server and typically affect gameplay mechanics, add new blocks/items, or modify world generation.
-- **Client-Side Mods**: These run on players' computers and typically affect visuals, audio, or provide information overlays.
-- **Both-Side Mods**: Some mods have components that run on both server and client.
-
-When adding mods to your Magma server:
-- Server-side mods should be installed on your server
-- Client-side mods need to be installed on players' clients
-- Both-side mods need installation on both server and clients
-
-## Mod Configuration
-
-Most mods create configuration files in the `config` folder when first loaded. To configure a mod:
-
-1. Start your server with the mod installed
-2. Let the server fully load to generate config files
-3. Stop the server
-4. Edit the mod's configuration file(s) in the `config` directory
-5. Restart the server
-
-### Common Config File Formats
-
-- `.toml` - TOML format files (common in newer mods)
-- `.cfg` - Standard configuration files
-- `.json` - JSON format configuration
-- `.properties` - Simple key-value configuration
-
-### Example: Editing a Mod Config
-
-```bash
-# Edit a mod config file
-nano config/examplemod.toml
-
-# After editing, restart your server
-cd ~/minecraft-server
-./run.sh
-```
-
-## Managing Mod Dependencies
-
-Many mods require other mods to function. These are called dependencies.
-
-### Identifying Dependencies
-
-When a mod fails to load due to missing dependencies, check the server logs for messages like:
-
-```
-[ERROR]: Missing required dependency: examplelib
-```
-
-### Installing Dependencies
-
-1. Find and download the required dependency
-2. Place it in your `mods` folder
-3. Restart the server
-
-### Library Mods
-
-Some mods aren't full mods themselves but libraries that other mods use. Common libraries include:
-- Collective
-- Architectury API
-- Kotlin for Forge
-- Cloth Config API
-
-Always include these if they're required by your mods.
-
-## Updating Mods
-
-To update mods:
+## Installing
 
 1. Stop your server
-2. Backup your server files (particularly the `mods` and `config` folders)
-3. Remove the old mod `.jar` file
-4. Add the new mod `.jar` file
-5. Start your server
-6. Check logs for any issues
+2. Drop the `.jar` into the `mods` folder
+3. Start the server
 
-### Mod Version Compatibility
+```bash
+cp ~/downloads/some-mod.jar ~/server/mods/
+```
 
-When updating:
-- Config formats may change between versions
-- World data may need conversion
-- Dependencies may need updating
+## Configuration
 
-Always read the mod's update notes before upgrading.
+Mods generate config files in the `config` folder on first run. Stop the server, edit the config, restart.
 
-## Troubleshooting Common Issues
+## Dependencies
 
-### Mod Not Loading
+If a mod fails to load, check `logs/latest.log` for missing dependency errors. Download and add the required library mods to your `mods` folder.
 
-If a mod isn't loading, check:
-1. Server logs for error messages
-2. If the mod is for the correct Minecraft version
-3. If all required dependencies are installed
-4. If the mod is compatible with NeoForge
+## Updating
 
-### Server Crashes on Startup
+1. Stop server
+2. Back up `mods` and `config` folders
+3. Remove old `.jar`, add new one
+4. Start server
 
-If your server crashes when starting with a new mod:
-1. Check logs in the `logs` directory
-2. Remove the mod and see if the server starts
-3. Try the mod by itself (with just dependencies) to isolate conflicts
+## Troubleshooting
 
-### Mod Conflicts with Plugins
-
-If a mod conflicts with a plugin:
-1. Identify which mod and plugin are conflicting through logs
-2. Check if configuration changes can resolve the conflict
-3. Look for alternative mods or plugins that provide similar functionality
-4. Check the mod and plugin's documentation for known issues
-
-## Advanced: Creating Mod Packs
-
-For servers with many mods, consider creating a proper modpack:
-
-1. Create a manifest of all mods with versions
-2. Store configurations in version control
-3. Create installation instructions or scripts
-4. Consider using a modpack manager like CurseForge or MultiMC
-
-## Next Steps
-
-After adding mods to your server, you might want to:
-- [Add plugins](/docs/guides/adding-plugins) to enhance your server
-- [Optimize your server](/docs/guides/optimization) for better performance with mods
-- Explore [mod and plugin integration](/docs/guides/mod-integration)
+- **Mod not loading** — wrong Minecraft version, missing dependency
+- **Crash on startup** — check `logs/latest.log`, try removing the mod to isolate the issue
+- **Conflicts with plugins** — if a mod and plugin do the same thing, pick one

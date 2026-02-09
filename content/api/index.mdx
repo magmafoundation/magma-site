@@ -1,49 +1,23 @@
 ---
 title: "API Reference"
-description: "Documentation for the Magma website API endpoints"
+description: "Magma website API endpoints"
 ---
 
-# Magma Website API
+# API Reference
 
-This documentation covers the public API endpoints available on the Magma website. These endpoints can be used to access information about Magma versions and other data programmatically, making them useful for tools, launchers, or integrations.
+Public endpoints for accessing Magma version data. Useful for launchers, scripts, and integrations.
 
-## Available Endpoints
+## Endpoints
 
-- [Versions List API](/api-docs/endpoints/versions-list) - Get a list of available Magma versions
-- [Version Details API](/api-docs/endpoints/version-details) - Get detailed information about a specific version
-- [Download API](/api-docs/endpoints/download) - Direct download of a specific version
-- [Latest Version API](/api-docs/endpoints/latest-version) - Get information about the latest version
-- [Latest Download API](/api-docs/endpoints/latest-download) - Direct download of the latest version
-- [Direct JAR Download](/api-docs/endpoints/direct-jar-download) - Convenient URL for downloading the latest launcher JAR
+- [Versions List](/api-docs/endpoints/versions-list) — List available versions
+- [Version Details](/api-docs/endpoints/version-details) — Info about a specific version
+- [Download](/api-docs/endpoints/download) — Download a specific version
+- [Latest Version](/api-docs/endpoints/latest-version) — Latest version info
+- [Latest Download](/api-docs/endpoints/latest-download) — Download the latest version
+- [Direct JAR Download](/api-docs/endpoints/direct-jar-download) — Quick URL for latest launcher JAR
 
-## Implementation Notes
+## Notes
 
-The API works by fetching and parsing the Maven metadata from the official Magma repository and has the following features:
-
-- Automatically detects the Minecraft version from the Magma version string
-- Identifies stable vs beta/development versions
-- Caches responses for 1 hour to reduce load on the Maven server
-- Limits results by default to improve performance
-- Falls back to alternative methods if the primary method fails
-- Returns an empty array if no versions can be found (does not use fallback data)
-
-### Error Handling
-
-The API returns appropriate HTTP status codes:
-
-- `200 OK`: Request successful, data returned
-- `500 Internal Server Error`: Server error occurred
-
-When no versions are found but the API itself works properly, it will return a 200 status with an empty `versions` array:
-
-```json
-{
-  "total": 0,
-  "limit": 10,
-  "versions": []
-}
-```
-
-### Rate Limiting
-
-Be considerate with your API usage. While there are currently no strict rate limits enforced, excessive requests may be throttled in the future.
+- Responses are cached for 1 hour.
+- Returns `200` with an empty `versions` array when no versions match.
+- No strict rate limits currently, but be reasonable.

@@ -1,108 +1,39 @@
 ---
-title: "Installation"
-description: "Learn how to install Magma on your server"
+title: Installation
+description: "Install Magma on your server"
 ---
 
-# Installing Magma
+# Installation
 
-This guide will walk you through the process of installing Magma on your server. Magma combines the functionality of NeoForge mods and Bukkit plugins, giving you the best of both worlds for your Minecraft server.
+## Requirements
 
-## System Requirements
+- Java 21+
+- 4GB+ RAM
+- 2GB+ disk space
 
-Before installing Magma, ensure your system meets the following requirements:
+## Download
 
-- **Java**: Java 21 or newer is required
-- **RAM**: Minimum 4GB RAM recommended (more for larger modpacks)
-- **CPU**: Dual-core processor or better recommended
-- **Storage**: At least 2GB available for the server (more for mods and world data)
-- **Network**: Stable internet connection with port forwarding capability
-
-## Download and Install Magma
-
-Magma offers two main ways to install:
-
-### Option 1: Using the Installer (Recommended)
-
-1. Visit the [Magma downloads page](https://magmafoundation.org/downloads)
-2. Download the installer (e.g., `magma-21.1.29-beta-installer.jar`)
-3. Create a new folder for your Magma server
-
-### Option 2: Using the Launcher (For versions 1.40-beta and above)
-
-1. Visit the [Magma downloads page](https://magmafoundation.org/downloads)
-2. Look for the orange "Launcher" button for versions 1.40-beta and above
-3. Download the launcher JAR file (with the `-launcher.jar` suffix)
-4. Create a new folder for your Magma server
-
-### Option 3: Quick Download (Command Line)
-
-If you prefer using the command line, you can download the latest launcher directly:
+Grab the latest build from the [downloads page](/downloads), or use the CLI:
 
 ```bash
 wget magmafoundation.org/downloads/magma.jar
-# Or using curl
-curl -O magmafoundation.org/downloads/magma.jar
 ```
 
-This direct URL always points to the latest launcher version, making it ideal for server setup scripts and automation.
-
-## Installation Steps
-
-### Installer Method (All Versions)
-
-1. Move the downloaded installer (e.g., `magma-21.1.29-beta-installer.jar`) to your server folder
-2. Run the installer with the following command:
+## Run
 
 ```bash
-java -jar magma-21.1.29-beta-installer.jar --installServer
+java -jar magma-21.1.67-beta-launcher.jar
 ```
 
-3. The installer will set up everything needed for your Magma server
+That's it. The launcher handles everything — no installer or extra setup needed.
 
-### Launcher Method (Version 1.40-beta and above)
+## First Run
 
-1. Move the downloaded launcher JAR (e.g., `magma-21.1.29-beta-launcher.jar`) to your server folder
-2. Run the launcher directly with:
-
-```bash
-java -jar magma-21.1.29-beta-launcher.jar
-```
-
-3. The launcher will guide you through the setup process
-
-### Running the Server
-
-#### Windows
-
-After installation is complete, run the server using the provided batch file:
-
-```bat
-start.bat
-```
-
-#### Linux/macOS
-
-After installation is complete, run the server using the provided shell script:
-
-```bash
-chmod +x run.sh  # Make the script executable (first time only)
-./run.sh
-```
-
-## First-Time Setup
-
-When you start the Magma server for the first time:
-
-1. The server will generate configuration files and then stop
-2. Edit the `eula.txt` file and change `eula=false` to `eula=true` to accept the Minecraft End User License Agreement
-3. Start the server again using the appropriate script for your operating system
-4. The server will fully start up and generate the world
+1. Server generates config files and stops
+2. Edit `eula.txt` — change `eula=false` to `eula=true`
+3. Start the server again
 
 ## Next Steps
 
-Now that your Magma server is installed, you can:
-
-- Learn how to [add mods](/docs/guides/adding-mods) to your server
-- Set up [Bukkit plugins](/docs/guides/adding-plugins) for enhanced functionality
-
-If you encounter any issues during installation, see our [troubleshooting](/docs/reference/troubleshooting) guide.
+- [Add mods](/docs/guides/adding-mods)
+- [Add plugins](/docs/guides/adding-plugins)

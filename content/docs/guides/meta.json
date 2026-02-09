@@ -1,6 +1,6 @@
 {
-  "title": "Guides",
-  "description": "Detailed guides for various aspects of running a Magma server.",
-  "pages": ["index", "adding-mods", "adding-plugins", "optimization"],
-  "defaultOpen": true
+    "title": "Guides",
+    "description": "Detailed guides for various aspects of running a Magma server.",
+    "pages": ["index", "adding-mods", "adding-plugins", "optimization"],
+    "defaultOpen": true
 }

@@ -1,36 +1,20 @@
 ---
 title: "Direct JAR Download"
-description: "Quick download URL for Magma launcher JAR"
+description: "Quick download URL for the latest launcher JAR"
 ---
 
 # Direct JAR Download
-
-A convenient URL for downloading the latest Magma launcher JAR file. This is particularly useful for scripting and automation.
-
-## Endpoint
 
 ```
 GET /downloads/magma.jar
 ```
 
-## Response
+Downloads the latest Magma launcher JAR. Falls back to the regular JAR if the launcher isn't available.
 
-This endpoint directly downloads the latest Magma launcher JAR file. No JSON response is provided.
-
-## Example Usage
-
-Using wget:
 ```bash
 wget magmafoundation.org/downloads/magma.jar
 ```
 
-Using curl:
 ```bash
 curl -O magmafoundation.org/downloads/magma.jar
 ```
-
-## Notes
-
-- This endpoint always downloads the latest version of the Magma launcher.
-- If the launcher is not available for the latest version, it will fall back to the regular JAR.
-- The downloaded file will be named `magma-{VERSION}-launcher.jar` where `{VERSION}` is the latest version number.

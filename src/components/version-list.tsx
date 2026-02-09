@@ -1,428 +1,328 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "./ui/table";
-import { Badge } from "./ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
 interface MavenArtifact {
-  groupId: string;
-  artifactId: string;
-  version: string;
-  minecraftVersion?: string;
-  lastUpdated?: string;
-  downloadUrl?: string;
-  installerUrl?: string;
-  launcherUrl?: string;
-  changelogUrl?: string;
-  isStable?: boolean;
-  fileSize?: string;
-  releaseDate?: string;
-  hasInstaller?: boolean;
-  hasLauncher?: boolean;
-  hasChangelog?: boolean;
+    groupId: string;
+    artifactId: string;
+    version: string;
+    minecraftVersion?: string;
+    lastUpdated?: string;
+    downloadUrl?: string;
+    installerUrl?: string;
+    launcherUrl?: string;
+    changelogUrl?: string;
+    isStable?: boolean;
+    fileSize?: string;
+    releaseDate?: string;
+    hasInstaller?: boolean;
+    hasLauncher?: boolean;
+    hasChangelog?: boolean;
 }
 
 interface VersionsByMinecraft {
-  [key: string]: MavenArtifact[];
+    [key: string]: MavenArtifact[];
+}
+
+function getMinecraftVersion(version: string): string {
+    if (version.startsWith("21.")) return "1.21.x";
+    if (version.includes("-")) {
+        const parts = version.split("-");
+        if (parts.length > 0 && parts[0].match(/^\d+\.\d+(\.\d+)?$/)) {
+            return parts[0];
+        }
+    }
+    const match = version.match(/^(\d+\.\d+(?:\.\d+)?)/);
+    return match ? match[1] : "Unknown";
 }
 
 export function VersionList() {
-  const [versions, setVersions] = useState<MavenArtifact[]>([]);
-  const [versionsByMinecraft, setVersionsByMinecraft] =
-    useState<VersionsByMinecraft>({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<string>("all");
-  const [stabilityFilter, setStabilityFilter] = useState<
-    "all" | "stable" | "beta"
-  >("all");
-  const [limit, setLimit] = useState<number>(10);
-  const [totalVersions, setTotalVersions] = useState<number>(0);
+    const [versions, setVersions] = useState<MavenArtifact[]>([]);
+    const [versionsByMinecraft, setVersionsByMinecraft] =
+        useState<VersionsByMinecraft>({});
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [activeTab, setActiveTab] = useState<string>("all");
+    const [stabilityFilter, setStabilityFilter] = useState<
+        "all" | "stable" | "beta"
+    >("all");
+    const [limit, setLimit] = useState<number>(10);
+    const [totalVersions, setTotalVersions] = useState<number>(0);
 
-  useEffect(() => {
-    async function fetchVersions() {
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/versions?limit=${limit}`);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch versions: ${response.status}`);
+    useEffect(() => {
+        async function fetchVersions() {
+            try {
+                setLoading(true);
+                const response = await fetch(`/api/versions?limit=${limit}`);
+                if (!response.ok) {
+                    throw new Error(
+                        `Failed to fetch versions: ${response.status}`,
+                    );
+                }
+                const data = await response.json();
+                const { total, versions: fetchedVersions } = data;
+                setTotalVersions(total);
+                setVersions(fetchedVersions);
+
+                const byMinecraft: VersionsByMinecraft = {};
+                fetchedVersions.forEach((artifact: MavenArtifact) => {
+                    const mcVersion =
+                        artifact.minecraftVersion ||
+                        getMinecraftVersion(artifact.version);
+                    if (!byMinecraft[mcVersion]) {
+                        byMinecraft[mcVersion] = [];
+                    }
+                    byMinecraft[mcVersion].push(artifact);
+                });
+
+                setVersionsByMinecraft(byMinecraft);
+
+                if (Object.keys(byMinecraft).length > 0) {
+                    setActiveTab(Object.keys(byMinecraft)[0]);
+                }
+            } catch (err) {
+                console.error("Error fetching versions:", err);
+                setError(
+                    err instanceof Error
+                        ? err.message
+                        : "Failed to fetch versions",
+                );
+            } finally {
+                setLoading(false);
+            }
         }
-        const data = await response.json();
 
-        // The API now returns { total, limit, versions }
-        const { total, versions: fetchedVersions } = data;
-        setTotalVersions(total);
+        fetchVersions();
+    }, [limit]);
 
-        // Use versions directly without fetching detailed information
-        setVersions(fetchedVersions);
-
-        // Organize versions by Minecraft version
-        const byMinecraft: VersionsByMinecraft = {};
-        fetchedVersions.forEach((artifact: MavenArtifact) => {
-          // Use server-provided minecraftVersion if available, otherwise calculate it
-          const mcVersion =
-            artifact.minecraftVersion || getMinecraftVersion(artifact.version);
-          if (!byMinecraft[mcVersion]) {
-            byMinecraft[mcVersion] = [];
-          }
-          byMinecraft[mcVersion].push(artifact);
+    const applyStabilityFilter = (
+        versions: MavenArtifact[],
+    ): MavenArtifact[] => {
+        if (stabilityFilter === "all") return versions;
+        return versions.filter((artifact) => {
+            if (stabilityFilter === "stable") return artifact.isStable === true;
+            if (stabilityFilter === "beta") return artifact.isStable === false;
+            return true;
         });
+    };
 
-        setVersionsByMinecraft(byMinecraft);
+    const getBuildVersion = (version: string): string => {
+        const parts = version.split(".");
+        if (parts.length >= 3) return parts.slice(1).join(".");
+        return version;
+    };
 
-        // Set the first Minecraft version as the active tab
-        if (Object.keys(byMinecraft).length > 0) {
-          setActiveTab(Object.keys(byMinecraft)[0]);
-        }
-      } catch (err) {
-        console.error("Error fetching versions:", err);
-        setError(
-          err instanceof Error ? err.message : "Failed to fetch versions"
+    if (loading) {
+        return (
+            <div className="rounded-xl border bg-fd-card p-8 text-center">
+                <p className="text-sm text-fd-muted-foreground">
+                    Loading versions...
+                </p>
+            </div>
         );
-      } finally {
-        setLoading(false);
-      }
     }
 
-    fetchVersions();
-  }, [limit]);
-
-  // Filter versions based on stability setting
-  const applyStabilityFilter = (versions: MavenArtifact[]): MavenArtifact[] => {
-    if (stabilityFilter === "all") return versions;
-
-    return versions.filter((artifact) => {
-      if (stabilityFilter === "stable") {
-        return artifact.isStable === true;
-      } else if (stabilityFilter === "beta") {
-        return artifact.isStable === false;
-      }
-      return true;
-    });
-  };
-
-  // Extract minecraft versions from version strings (e.g., "21.1.33-beta" → "1.21.x")
-  const getMinecraftVersion = (version: string): string => {
-    // First attempt to detect Magma's version format for newer releases (e.g., "21.1.33-beta")
-    if (version.startsWith("21.")) {
-      return "1.21.x";
-    } else if (version.includes("-")) {
-      // Handle versions like "1.20.4-0.1.0" where Minecraft version is explicit
-      const parts = version.split("-");
-      if (parts.length > 0 && parts[0].match(/^\d+\.\d+(\.\d+)?$/)) {
-        return parts[0];
-      }
-    }
-
-    // Fallback to generic pattern extraction
-    const match = version.match(/^(\d+\.\d+(?:\.\d+)?)/);
-    return match ? match[1] : "Unknown";
-  };
-
-  // Extract build version (e.g., "21.1.33-beta" → "1.33-beta")
-  const getBuildVersion = (version: string): string => {
-    const parts = version.split(".");
-    if (parts.length >= 3) {
-      return parts.slice(1).join("."); // Remove the first part (MC version)
-    }
-    return version;
-  };
-
-  if (loading) {
-    return (
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Magma Versions</CardTitle>
-          <CardDescription>Loading available versions...</CardDescription>
-        </CardHeader>
-        <CardContent className="py-8 text-center">
-          Loading versions...
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (error) {
-    return (
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Magma Versions</CardTitle>
-          <CardDescription>Error loading versions</CardDescription>
-        </CardHeader>
-        <CardContent className="py-8 text-center text-destructive">
-          Error: {error}
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (versions.length === 0) {
-    return (
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Magma Versions</CardTitle>
-          <CardDescription>
-            No versions available from repository
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="py-8 text-center">
-          <div className="space-y-4">
-            <p>
-              No versions could be fetched from the Maven repository at this
-              time.
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Please check back later or visit the{" "}
-              <a
-                href="https://repo.magmafoundation.org/#/releases/org/magmafoundation/magma"
-                className="text-primary hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                repository directly
-              </a>
-              .
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  const mcVersions = Object.keys(versionsByMinecraft).sort((a, b) => {
-    // Sort Minecraft versions in descending order
-    return b.localeCompare(a, undefined, { numeric: true });
-  });
-
-  return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Magma Versions</CardTitle>
-        <CardDescription>
-          Available versions from the official Magma repository
-          {totalVersions > 0 && totalVersions > versions.length && (
-            <>
-              {" "}
-              - Showing {versions.length} of {totalVersions} versions
-            </>
-          )}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="mb-6 flex flex-wrap gap-4 items-center justify-between">
-          <div>
-            <p className="text-sm text-muted-foreground mb-2">
-              Filter by stability:
-            </p>
-            <div className="flex gap-2">
-              <Button
-                variant={stabilityFilter === "all" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setStabilityFilter("all")}
-              >
-                All Versions
-              </Button>
-              <Button
-                variant={stabilityFilter === "stable" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setStabilityFilter("stable")}
-              >
-                Stable Only
-              </Button>
-              <Button
-                variant={stabilityFilter === "beta" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setStabilityFilter("beta")}
-              >
-                Beta Only
-              </Button>
+    if (error) {
+        return (
+            <div className="rounded-xl border bg-fd-card p-8 text-center">
+                <p className="text-sm text-red-500">Error: {error}</p>
             </div>
-          </div>
+        );
+    }
 
-          <div>
-            <p className="text-sm text-muted-foreground mb-2">Show versions:</p>
-            <div className="flex gap-2">
-              <Button
-                variant={limit === 10 ? "default" : "outline"}
-                size="sm"
-                onClick={() => setLimit(10)}
-              >
-                10
-              </Button>
-              <Button
-                variant={limit === 20 ? "default" : "outline"}
-                size="sm"
-                onClick={() => setLimit(20)}
-              >
-                20
-              </Button>
-              <Button
-                variant={limit === 50 ? "default" : "outline"}
-                size="sm"
-                onClick={() => setLimit(50)}
-              >
-                50
-              </Button>
-              <Button
-                variant={limit === 0 ? "default" : "outline"}
-                size="sm"
-                onClick={() => setLimit(0)}
-              >
-                All
-              </Button>
+    if (versions.length === 0) {
+        return (
+            <div className="rounded-xl border bg-fd-card p-8 text-center">
+                <p className="text-sm text-fd-muted-foreground">
+                    No versions available.{" "}
+                    <a
+                        href="https://repo.magmafoundation.org/#/releases/org/magmafoundation/magma"
+                        className="text-fd-primary hover:underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Visit repository directly
+                    </a>
+                </p>
             </div>
-          </div>
-        </div>
+        );
+    }
 
-        <Tabs
-          defaultValue={activeTab}
-          onValueChange={setActiveTab}
-          className="w-full"
-        >
-          <TabsList className="mb-4 flex flex-wrap">
-            {mcVersions.map((mcVersion) => (
-              <TabsTrigger key={mcVersion} value={mcVersion}>
-                {mcVersion}
-              </TabsTrigger>
-            ))}
-            <TabsTrigger value="all">All Versions</TabsTrigger>
-          </TabsList>
+    const mcVersions = Object.keys(versionsByMinecraft).sort((a, b) =>
+        b.localeCompare(a, undefined, { numeric: true }),
+    );
 
-          {mcVersions.map((mcVersion) => (
-            <TabsContent key={mcVersion} value={mcVersion} className="w-full">
-              <VersionTable
-                versions={applyStabilityFilter(versionsByMinecraft[mcVersion])}
-                showMinecraftVersion={false}
-                getBuildVersion={getBuildVersion}
-              />
-            </TabsContent>
-          ))}
+    const currentVersions =
+        activeTab === "all"
+            ? applyStabilityFilter(versions)
+            : applyStabilityFilter(versionsByMinecraft[activeTab] || []);
 
-          <TabsContent value="all" className="w-full">
-            <VersionTable
-              versions={applyStabilityFilter(versions)}
-              showMinecraftVersion={true}
-              getMinecraftVersion={getMinecraftVersion}
-              getBuildVersion={getBuildVersion}
-            />
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
-  );
-}
+    return (
+        <div className="rounded-xl border bg-fd-card overflow-hidden">
+            {/* Toolbar */}
+            <div className="border-b p-4 flex flex-wrap gap-4 items-center justify-between">
+                <div className="flex flex-wrap gap-1.5">
+                    {mcVersions.map((mcVersion) => (
+                        <button
+                            type="button"
+                            key={mcVersion}
+                            onClick={() => setActiveTab(mcVersion)}
+                            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                                activeTab === mcVersion
+                                    ? "bg-fd-primary text-fd-primary-foreground"
+                                    : "bg-fd-muted text-fd-muted-foreground hover:text-fd-foreground"
+                            }`}
+                        >
+                            {mcVersion}
+                        </button>
+                    ))}
+                    <button
+                        type="button"
+                        onClick={() => setActiveTab("all")}
+                        className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                            activeTab === "all"
+                                ? "bg-fd-primary text-fd-primary-foreground"
+                                : "bg-fd-muted text-fd-muted-foreground hover:text-fd-foreground"
+                        }`}
+                    >
+                        All
+                    </button>
+                </div>
 
-interface VersionTableProps {
-  versions: MavenArtifact[];
-  showMinecraftVersion: boolean;
-  getMinecraftVersion?: (version: string) => string;
-  getBuildVersion: (version: string) => string;
-}
+                <div className="flex items-center gap-3">
+                    <div className="flex gap-1">
+                        {(["all", "stable", "beta"] as const).map((filter) => (
+                            <button
+                                type="button"
+                                key={filter}
+                                onClick={() => setStabilityFilter(filter)}
+                                className={`rounded-lg px-2.5 py-1.5 text-xs font-medium capitalize transition-colors ${
+                                    stabilityFilter === filter
+                                        ? "bg-fd-primary text-fd-primary-foreground"
+                                        : "text-fd-muted-foreground hover:text-fd-foreground"
+                                }`}
+                            >
+                                {filter}
+                            </button>
+                        ))}
+                    </div>
 
-function VersionTable({
-  versions,
-  showMinecraftVersion,
-  getMinecraftVersion,
-  getBuildVersion,
-}: VersionTableProps) {
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          {showMinecraftVersion && <TableHead>Minecraft</TableHead>}
-          <TableHead>Version</TableHead>
-          <TableHead>Build</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead className="text-right">Download Options</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {versions.map((artifact) => (
-          <TableRow key={artifact.version}>
-            {showMinecraftVersion && (
-              <TableCell>
-                <Badge variant="outline">
-                  {artifact.minecraftVersion ||
-                    getMinecraftVersion?.(artifact.version) ||
-                    "Unknown"}
-                </Badge>
-              </TableCell>
+                    <select
+                        value={limit}
+                        onChange={(e) => setLimit(Number(e.target.value))}
+                        className="rounded-lg border bg-fd-background px-2 py-1.5 text-xs"
+                    >
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={50}>50</option>
+                        <option value={0}>All</option>
+                    </select>
+                </div>
+            </div>
+
+            {/* Description */}
+            {totalVersions > 0 && totalVersions > versions.length && (
+                <div className="border-b px-4 py-2 text-xs text-fd-muted-foreground">
+                    Showing {versions.length} of {totalVersions} versions
+                </div>
             )}
-            <TableCell>{artifact.version}</TableCell>
-            <TableCell>{getBuildVersion(artifact.version)}</TableCell>
-            <TableCell>
-              {artifact.isStable ? (
-                <Badge
-                  variant="default"
-                  className="bg-green-500 hover:bg-green-600"
-                >
-                  Stable
-                </Badge>
-              ) : (
-                <Badge variant="secondary">Beta</Badge>
-              )}
-            </TableCell>
-            <TableCell className="text-right">
-              <div className="flex flex-wrap gap-2 justify-end">
-                {artifact.launcherUrl && artifact.hasLauncher && (
-                  <Button size="sm" asChild>
-                    <a
-                      href={`/api/versions/${artifact.version}/download?type=launcher`}
-                      title="Download Launcher"
-                    >
-                      Launcher
-                    </a>
-                  </Button>
-                )}
-                {artifact.installerUrl && (
-                  <Button
-                    size="sm"
-                    variant={artifact.hasLauncher ? "secondary" : "default"}
-                    asChild
-                  >
-                    <a
-                      href={`/api/versions/${artifact.version}/download?type=installer`}
-                      title="Download Installer"
-                    >
-                      Installer
-                    </a>
-                  </Button>
-                )}
-                {artifact.changelogUrl && (
-                  <Button size="sm" variant="secondary" asChild>
-                    <a
-                      href={`/api/versions/${artifact.version}/download?type=changelog`}
-                      title="View Changelog"
-                    >
-                      Changelog
-                    </a>
-                  </Button>
-                )}
-                {!artifact.installerUrl &&
-                  (!artifact.launcherUrl || !artifact.hasLauncher) && (
-                    <span className="text-muted-foreground">Not available</span>
-                  )}
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
+
+            {/* Table */}
+            <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                    <thead>
+                        <tr className="border-b text-left text-xs text-fd-muted-foreground">
+                            {activeTab === "all" && (
+                                <th className="px-4 py-3 font-medium">
+                                    Minecraft
+                                </th>
+                            )}
+                            <th className="px-4 py-3 font-medium">Version</th>
+                            <th className="px-4 py-3 font-medium">Build</th>
+                            <th className="px-4 py-3 font-medium">Status</th>
+                            <th className="px-4 py-3 font-medium text-right">
+                                Downloads
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {currentVersions.map((artifact) => (
+                            <tr
+                                key={artifact.version}
+                                className="border-b last:border-b-0 hover:bg-fd-accent/30 transition-colors"
+                            >
+                                {activeTab === "all" && (
+                                    <td className="px-4 py-3">
+                                        <span className="inline-flex items-center rounded-md border px-1.5 py-0.5 text-xs">
+                                            {artifact.minecraftVersion ||
+                                                getMinecraftVersion(
+                                                    artifact.version,
+                                                )}
+                                        </span>
+                                    </td>
+                                )}
+                                <td className="px-4 py-3 font-mono text-xs">
+                                    {artifact.version}
+                                </td>
+                                <td className="px-4 py-3 font-mono text-xs text-fd-muted-foreground">
+                                    {getBuildVersion(artifact.version)}
+                                </td>
+                                <td className="px-4 py-3">
+                                    <span
+                                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                                            artifact.isStable
+                                                ? "bg-green-500/10 text-green-600 dark:text-green-400"
+                                                : "bg-fd-muted text-fd-muted-foreground"
+                                        }`}
+                                    >
+                                        {artifact.isStable ? "Stable" : "Beta"}
+                                    </span>
+                                </td>
+                                <td className="px-4 py-3">
+                                    <div className="flex flex-wrap gap-1.5 justify-end">
+                                        {artifact.launcherUrl &&
+                                            artifact.hasLauncher && (
+                                                <a
+                                                    href={`/api/versions/${artifact.version}/download?type=launcher`}
+                                                    className="inline-flex h-7 items-center rounded-md bg-gradient-to-r from-orange-500 to-red-500 px-2.5 text-xs font-medium text-white transition-opacity hover:opacity-90"
+                                                >
+                                                    Launcher
+                                                </a>
+                                            )}
+                                        {artifact.installerUrl && (
+                                            <a
+                                                href={`/api/versions/${artifact.version}/download?type=installer`}
+                                                className={`inline-flex h-7 items-center rounded-md border px-2.5 text-xs font-medium transition-colors hover:bg-fd-accent ${
+                                                    !artifact.hasLauncher
+                                                        ? "bg-fd-primary text-fd-primary-foreground border-transparent hover:opacity-90"
+                                                        : ""
+                                                }`}
+                                            >
+                                                Installer
+                                            </a>
+                                        )}
+                                        {artifact.changelogUrl && (
+                                            <a
+                                                href={`/api/versions/${artifact.version}/download?type=changelog`}
+                                                className="inline-flex h-7 items-center rounded-md border px-2.5 text-xs transition-colors hover:bg-fd-accent"
+                                            >
+                                                Changelog
+                                            </a>
+                                        )}
+                                        {!artifact.installerUrl &&
+                                            (!artifact.launcherUrl ||
+                                                !artifact.hasLauncher) && (
+                                                <span className="text-xs text-fd-muted-foreground">
+                                                    Not available
+                                                </span>
+                                            )}
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
 }

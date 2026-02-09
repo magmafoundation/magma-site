@@ -1,6 +1,6 @@
 {
-  "title": "Reference",
-  "description": "Commands, troubleshooting, and technical reference for Magma.",
-  "pages": ["index", "commands", "troubleshooting", "api", "website-api"],
-  "defaultOpen": true
+    "title": "Reference",
+    "description": "Commands, troubleshooting, and technical reference for Magma.",
+    "pages": ["index", "commands", "troubleshooting", "api", "website-api"],
+    "defaultOpen": true
 }

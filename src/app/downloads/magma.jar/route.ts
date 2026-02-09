@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { headers } from "next/headers";
+import { NextResponse } from "next/server";
 import { getBaseUrl } from "../../../lib/baseurl";
 
 /**
@@ -12,15 +12,21 @@ export async function GET() {
         const baseUrl = getBaseUrl(requestHeaders);
 
         // Fetch the latest version from the versions endpoint with limit=1
-        const versionsResponse = await fetch(`${baseUrl}/api/versions?limit=1`, {
-            headers: {
-                "User-Agent": "Mozilla/5.0 (compatible; MagmaNeoWebsite/1.0)",
+        const versionsResponse = await fetch(
+            `${baseUrl}/api/versions?limit=1`,
+            {
+                headers: {
+                    "User-Agent":
+                        "Mozilla/5.0 (compatible; MagmaNeoWebsite/1.0)",
+                },
+                next: { revalidate: 3600 }, // Cache for 1 hour
             },
-            next: { revalidate: 3600 }, // Cache for 1 hour
-        });
+        );
 
         if (!versionsResponse.ok) {
-            throw new Error(`Failed to fetch versions: ${versionsResponse.status}`);
+            throw new Error(
+                `Failed to fetch versions: ${versionsResponse.status}`,
+            );
         }
 
         const versionsData = await versionsResponse.json();
@@ -28,7 +34,7 @@ export async function GET() {
         if (!versionsData.versions || versionsData.versions.length === 0) {
             return NextResponse.json(
                 { error: "No versions available" },
-                { status: 404 }
+                { status: 404 },
             );
         }
 
@@ -56,7 +62,8 @@ export async function GET() {
             const jarCheck = await fetch(jarUrl, {
                 method: "HEAD",
                 headers: {
-                    "User-Agent": "Mozilla/5.0 (compatible; MagmaNeoWebsite/1.0)",
+                    "User-Agent":
+                        "Mozilla/5.0 (compatible; MagmaNeoWebsite/1.0)",
                 },
                 next: { revalidate: 3600 },
             });
@@ -64,7 +71,7 @@ export async function GET() {
             if (!jarCheck.ok) {
                 return NextResponse.json(
                     { error: "No download available for the latest version" },
-                    { status: 404 }
+                    { status: 404 },
                 );
             }
 
@@ -88,7 +95,7 @@ export async function GET() {
         console.error("Error in magma.jar download API:", error);
         return NextResponse.json(
             { error: "Failed to process download request" },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

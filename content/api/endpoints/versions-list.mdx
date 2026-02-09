@@ -1,23 +1,19 @@
 ---
-title: "Versions List API"
-description: "API endpoint to get a list of available Magma versions"
+title: "Versions List"
+description: "List available Magma versions"
 ---
 
-# Versions List API
-
-The Versions List API provides access to the latest Magma server software versions from the official Maven repository.
-
-## Endpoint
+# Versions List
 
 ```
 GET /api/versions
 ```
 
-## Query Parameters
+## Parameters
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `limit` | number | 10 | Number of versions to return. Set to 0 for all versions. |
+| `limit` | number | 10 | Number of versions to return. `0` for all. |
 
 ## Response
 
@@ -31,9 +27,9 @@ GET /api/versions
       "artifactId": "magma",
       "version": "21.1.33-beta",
       "minecraftVersion": "1.21.x",
-      "installerUrl": "https://repo.magmafoundation.org/releases/org/magmafoundation/magma/21.1.33-beta/magma-21.1.33-beta-installer.jar",
-      "launcherUrl": "https://repo.magmafoundation.org/releases/org/magmafoundation/magma/21.1.33-beta/magma-21.1.33-beta-launcher.jar",
-      "changelogUrl": "https://repo.magmafoundation.org/releases/org/magmafoundation/magma/21.1.33-beta/magma-21.1.33-beta-changelog.txt",
+      "installerUrl": "https://repo.magmafoundation.org/.../magma-21.1.33-beta-installer.jar",
+      "launcherUrl": "https://repo.magmafoundation.org/.../magma-21.1.33-beta-launcher.jar",
+      "changelogUrl": "https://repo.magmafoundation.org/.../magma-21.1.33-beta-changelog.txt",
       "isStable": false,
       "hasLauncher": true
     }
@@ -41,24 +37,14 @@ GET /api/versions
 }
 ```
 
-## Response Fields
+## Version Fields
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `total` | number | Total number of versions available in the repository |
-| `limit` | number | The current limit applied to the results |
-| `versions` | array | Array of version objects |
-
-Each version object contains:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `groupId` | string | The Maven group ID (always "org.magmafoundation") |
-| `artifactId` | string | The Maven artifact ID (always "magma") |
-| `version` | string | The version string |
-| `minecraftVersion` | string | The Minecraft version this build supports |
-| `installerUrl` | string | Direct download URL for the installer JAR file |
-| `launcherUrl` | string | Direct download URL for the launcher JAR file (with -launcher.jar suffix) for versions 1.40-beta and above |
-| `changelogUrl` | string | URL to the changelog text file |
-| `isStable` | boolean | Indicates if this is a stable release (not a beta/alpha/snapshot) |
-| `hasLauncher` | boolean | Indicates if the version has launcher functionality (versions 1.40-beta and above) |
+| `version` | string | Version string |
+| `minecraftVersion` | string | Minecraft version supported |
+| `installerUrl` | string | Installer JAR download URL |
+| `launcherUrl` | string | Launcher JAR download URL (v1.40-beta+) |
+| `changelogUrl` | string | Changelog URL |
+| `isStable` | boolean | `true` for stable releases |
+| `hasLauncher` | boolean | `true` if launcher is available (v1.40-beta+) |

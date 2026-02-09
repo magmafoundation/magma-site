@@ -1,14 +1,14 @@
 {
-  "title": "Magma Documentation",
-  "description": "Documentation for the Magma Minecraft server software.",
-  "pages": [
-    "---Getting Started---",
-    "index",
-    "...(getting-started)",
-    "guides",
-    "reference"
-  ],
-  "folders": ["getting-started", "guides", "reference"],
-  "root": true,
-  "defaultOpen": true
+    "title": "Magma Documentation",
+    "description": "Documentation for the Magma Minecraft server software.",
+    "pages": [
+        "---Getting Started---",
+        "index",
+        "...(getting-started)",
+        "guides",
+        "reference"
+    ],
+    "folders": ["getting-started", "guides", "reference"],
+    "root": true,
+    "defaultOpen": true
 }
